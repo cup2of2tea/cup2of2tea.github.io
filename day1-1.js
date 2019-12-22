@@ -32,8 +32,8 @@ var colors = ['rgba(179, 0, 12, 1)', 'rgba(255, 0, 18, 1)', 'rgba(216, 216, 216,
 
 
 modules = modules.map((module, i) => {
-    var h = (Math.sqrt(modules[i]) / hModule) * 600;
-    var h2 = (Math.sqrt(fuels[i]) / hModule) * 600;
+    var h = Math.floor((Math.sqrt(modules[i]) / hModule) * 600);
+    var h2 = Math.floor((Math.sqrt(fuels[i]) / hModule) * 600);
     if (offsetH + h >= 600) { offsetX += 100; offsetH = 0; }
     if (offsetH2 + h2 >= 600) { offsetX2 -= 100; offsetH2 = 0; }
 
@@ -73,19 +73,18 @@ svg.selectAll(".module").data(modules).enter()
     })
     .attr("y", (data) => {
         return data.y;
-    }).transition().delay((data, i) => { return 3500 - data.delay + data.idx * 300; }).duration(300)
+    }).transition().delay((data, i) => { return 3500 - data.delay + data.idx * 1000; }).duration(300)
     .attr("x", (data) => {
         return 1000;
     }).attr("y", (data) => {
         return 0;
-    }).transition().delay((data, i) => { return 300; }).duration(300)
+    }).transition().delay((data, i) => { return 100; }).duration(100)
     .attr("width", (data) => {
         return data.h2;
     }).attr("height", (data) => {
         return data.h2;
-    }).transition().delay((data, i) => { return 300; }).duration(300)
+    }).transition().delay((data, i) => { return 100; }).duration(800)
     .attr("x", (data) => {
-
         return data.x2;
     }).attr("y", (data) => {
         return data.y2;
@@ -93,6 +92,10 @@ svg.selectAll(".module").data(modules).enter()
         sum += element.value2;
         svg.select("text").text(sum);
     });
+
+svg.selectAll(".module").
+
+    loadLiquidFillGauge("fillgauge1", 45.34);
 
 /*
 

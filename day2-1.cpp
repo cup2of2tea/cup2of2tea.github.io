@@ -25,13 +25,13 @@ int main()
         if (v[current] == 1)
         {
             v[v[current + 3]] = v[v[current + 1]] + v[v[current + 2]];
+            current += 4;
         }
         else if (v[current] == 2)
         {
             v[v[current + 3]] = v[v[current + 1]] * v[v[current + 2]];
+            current += 4;
         }
-
-        current += 4;
     }
     cout << v[0] << endl;
 }
