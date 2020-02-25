@@ -31,7 +31,53 @@ MathJax.Hub.Queue(function() {
 </script>
 <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
+# Le concours
 
+## Nos utilitaires
+
+En préparation du concours, j'avais développé quelques programmes C++ :
+- un utilitaire (squelettor) générant des squelettes de programmes python et c++ (parser et classes) à partir d'un fichier décrivant les entrées
+- une librairie générique d'algorithme génétique
+- des runners et un métarunner, permettant de lancer le code génétique (en variant les entrées et paramètres)
+
+Les entrées étant assez simples, squelettor ne servit à rien.
+
+## Teamwork
+
+Comme on l'avait prévu (et prévoir fut peut-être notre erreur), @MrFlibble et @Matleg partirent sur l'analyse du code et la recherche d'heuristiques pendant que je préparais le code génétique exploitant les solutions obtenues.
+
+# La revanche du créationnisme
+
+## Le principe de l'algorithme génétique
+
+L'algorithme génétique s'inspire des mécanismes biologiques de l'évolution: 
+
+- On a un individu (la solution), composé de gènes (fragment de solution)
+- Cet individu peut connaître des mutations (ajout ou suppression de fragment de solution, modification d'un gene)
+- Pour chaque génération (itération), on a une population (un ensemble de solutions)
+- Pour générer la génération de l'itération suivante, on garde les individus présentant le plus de potentiel et on les croise pour générer de nouveaux individus
+
+A force d'itérer, de garder les individus avec les meilleurs scores et d'introduire un peu d'aléatoire avec les croisements et mutations, on espère converger vers un optimum.
+
+## Limitations
+
+Après 2 h 10 de développement, j'ai fini la "base" de mon génétique.
+
+Mais deux problèmes apparaissent:
+
+- Les données sont trop lourdes: 10^5 librairies, 10^5 livres, parfois 10^5 livres pour une librairie ... Ca segfault, ça me force à faire des populations avec de très petites tailles (et donc limite la variété de la population), ça freeze, crash...
+
+- Et quand ça veut bien marcher, ça ne converge pas, du moins pas assez. 
+
+Pour le second problème, cela vient surement de la modélisation:
+
+Comme j'effectue des mutations qui consistent à supprimer/ajouter/modifier des librairies, mais que mes livres sont très liés à la présence et l'ordre des librairies, à chaque fois qu'un gêne librairie est ajouté, je regénère mes gênes de livres associés à cette librairie.
+
+Cela entraîne des discontinuités dans l'évaluation des individus, et l'on se retrouve bloqué sur des optimums locaux pour lesquels les mutations sont rares.
+
+Le lien fort entre les librairies et les livres pose un problème de modélisation que je n'ai pas réussi à résoudre.
+
+# Pendant ce temps
 
 # Programmation entière
 
