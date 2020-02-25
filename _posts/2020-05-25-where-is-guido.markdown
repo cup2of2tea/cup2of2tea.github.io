@@ -76,7 +76,7 @@ La première version se greffe en sortie du solveur que l'on avait déjà dével
 - On optimise seulement les livres qui sont affectés à telle ou telle librairie
 
 Pour cette version, une seule matrice de variables est définie:
-- bookIsInLibrairie[][], la variable bookIsInLibrairie[b][l] étant à 0 si le livre b est embarqué par la librairie l
+- $ bookIsInLibrairie[][] $ , la variable $ bookIsInLibrairie[b][l] $ étant à $ 0 $ si le livre $ b $ est embarqué par la librairie $ l $
 
 Pour avoir une matrice de dimension réduite, on applique l'optimisation suivante:
 - on ne garde que les livres qui sont au moins une fois dans les librairies de la solution
