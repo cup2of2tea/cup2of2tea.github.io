@@ -17,7 +17,8 @@ aze
 
 <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
-$a_b$
+$$ \nabla_\boldsymbol{x} J(\boldsymbol{x}) $$
+
 
 # Programmation entière
 
