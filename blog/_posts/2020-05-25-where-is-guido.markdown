@@ -12,15 +12,61 @@ Cet article a pour but de retracer notre cheminement durant le concours, aussi b
 En deuxième partie, on verra ensemble comment appliquer une méthode de programmation particulière (programmation entière) au problème, et si cela fonctionne.
 
 
-BLABLABLA
-aze
-
+<style TYPE="text/css">
+code.has-jax {font: inherit; font-size: 100%; background: inherit; border: inherit;}
+</style>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'] // removed 'code' entry
+    }
+});
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
 <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
-$$ \nabla_\boldsymbol{x} J(\boldsymbol{x}) $$
 
 
 # Programmation entière
+
+## Principe
+
+La programmation entière consiste à vérifier la faisabilité ou d'optimiser une fonction à partir d'un set de contraintes.
+
+Les fonctions définissant les contraintes et la fonction à optimiser sont linéaires et dotées de variables restreintes à un domaine entier.
+
+Par exemple, ceci est un problème de progammation entière:
+
+$ x >= 0 $
+
+$ y >= 0 $
+
+$ z >= 0 $
+
+$ 1 <= 2x + 3y <= 10 $
+
+$ 2 <= 1x + 4z <= 5 $
+
+$ Maximize 2x + 2y + 2z $
+
+Les 5 premières lignes sont des lignes de contraintes, la dernière est la fonction d'optimisation.
+
+Ce genre de problème est NP-complet (difficile à calculer), mais il existe des solveurs et algorithmes efficaces pour obtenir rapidement des solutions approchées ou optimales.
+
+## Or-tools
+
+Or-tools (découvert grâce à @MatthisHammel, ty!) est une libraire développée par Google et proposant des algorithmes d'optimisations, des solveurs etc...
+
+C'est l'outil que j'ai utilisé (la version python) pour définir mes problèmes de programmation entière.
+
+## Application au sujet
+
 
 Je vais d'abord présenter la version que l'on a pu exploiter pour améliorer notre score, avant de présenter une version plus ambitieuse (mais qui ne fonctionne pas).
 
@@ -65,7 +111,7 @@ for b in range(B):
             constraint.SetCoefficient(books_is_librairie[b][l],1)
 {% endhighlight %}
 
-Si une librairie a terminé son inscription le jour d, alors elle ne peut pas scanner plus de $$ (maxDays-d)\*shipping $$ livres.
+Si une librairie a terminé son inscription le jour d, alors elle ne peut pas scanner plus de $$ (maxDays-d)*shipping $$ livres.
 
 $$ \text{Pour chaque librairie l:} $$
 

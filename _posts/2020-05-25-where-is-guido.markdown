@@ -12,9 +12,23 @@ Cet article a pour but de retracer notre cheminement durant le concours, aussi b
 En deuxième partie, on verra ensemble comment appliquer une méthode de programmation particulière (programmation entière) au problème, et si cela fonctionne.
 
 
-BLABLABLA
-aze
-
+<style TYPE="text/css">
+code.has-jax {font: inherit; font-size: 100%; background: inherit; border: inherit;}
+</style>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'] // removed 'code' entry
+    }
+});
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
 <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
 
@@ -29,12 +43,17 @@ Les fonctions définissant les contraintes et la fonction à optimiser sont lin�
 
 Par exemple, ceci est un problème de progammation entière:
 
-$$ x >= 0 $$
-$$ y >= 0 $$
-$$ z >= 0 $$
-$$ 1 <= 2x + 3y <= 10 $$
-$$ 2 <= 1x + 4z <= 5 $$
-$$ Maximize 2x + 2y + 2z $$
+$ x >= 0 $
+
+$ y >= 0 $
+
+$ z >= 0 $
+
+$ 1 <= 2x + 3y <= 10 $
+
+$ 2 <= 1x + 4z <= 5 $
+
+$ Maximize 2x + 2y + 2z $
 
 Les 5 premières lignes sont des lignes de contraintes, la dernière est la fonction d'optimisation.
 
@@ -92,7 +111,7 @@ for b in range(B):
             constraint.SetCoefficient(books_is_librairie[b][l],1)
 {% endhighlight %}
 
-Si une librairie a terminé son inscription le jour d, alors elle ne peut pas scanner plus de $$ (maxDays-d)\*shipping $$ livres.
+Si une librairie a terminé son inscription le jour d, alors elle ne peut pas scanner plus de $$ (maxDays-d)*shipping $$ livres.
 
 $$ \text{Pour chaque librairie l:} $$
 
