@@ -50,7 +50,7 @@ for i in range(nbBooks):
 Un livre ne doit pas être ajouté dans une librairie qui ne le contient pas:
 {% highlight python %}
   Pour chaque livre b:
-    0 <= (La somme de books_is_in_librairie[b][l] avec l € [0,L-1] et b n'appartient pas à l)  <= 0
+    0 <= (La somme de books_is_in_librairie[b][l] avec l € [0,L-1] et b n\'appartient pas à l)  <= 0
 {% endhighlight %}
 
 {% highlight python %}
@@ -64,7 +64,7 @@ for i in range(nbBooks):
 Si une librairie a terminé son inscription le jour d, alors elle ne peut pas scanner plus de (maxDays-d)\*shipping livres.
 {% highlight python %}
   Pour chaque librairie l:
-    0 <= (La somme de books_is_in_librairie[b][l] avec l € [0,L-1] et b n'appartient pas à l)  <= (maxDays-d)*shipping
+    0 <= (La somme de books_is_in_librairie[b][l] avec l € [0,L-1] et b n\'appartient pas à l)  <= (maxDays-d)*shipping
 {% endhighlight %}
 
 {% highlight python %}
