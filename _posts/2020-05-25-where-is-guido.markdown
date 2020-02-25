@@ -31,9 +31,9 @@ MathJax.Hub.Queue(function() {
 </script>
 <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
-# Le concours
+## Le concours
 
-## Nos utilitaires
+### Nos utilitaires
 
 En préparation du concours, j'avais développé quelques programmes C++ :
 - un utilitaire (squelettor) générant des squelettes de programmes python et c++ (parser et classes) à partir d'un fichier décrivant les entrées
@@ -42,13 +42,13 @@ En préparation du concours, j'avais développé quelques programmes C++ :
 
 Les entrées étant assez simples, squelettor ne servit à rien.
 
-## Teamwork
+### Teamwork
 
 Comme on l'avait prévu (et prévoir fut peut-être notre plus grosse erreur), @MrFlibble et @Matleg partirent sur l'analyse du code et la recherche d'heuristiques pendant que je préparais le code génétique exploitant les solutions obtenues.
 
-# La revanche du créationnisme
+## La revanche du créationnisme
 
-## Le principe de l'algorithme génétique
+### Le principe de l'algorithme génétique
 
 L'algorithme génétique s'inspire des mécanismes biologiques de l'évolution: 
 
@@ -59,7 +59,7 @@ L'algorithme génétique s'inspire des mécanismes biologiques de l'évolution:
 
 A force d'itérer, de garder les individus avec les meilleurs scores et d'introduire un peu d'aléatoire avec les croisements et mutations, on espère converger vers un optimum.
 
-## Limitations
+### Limitations
 
 Après 2 h 10 de développement, j'ai fini la "base" de mon génétique.
 
@@ -77,11 +77,11 @@ Cela entraîne des discontinuités dans l'évaluation des individus, et l'on se 
 
 Le lien fort entre les librairies et les livres pose un problème de modélisation que je n'ai pas réussi à résoudre.
 
-# Les heuristiques
+## Les heuristiques
 
 Pendant ce temps, @MrFlibble et @Matleg ont pu analysé les données d'entrée et développé quelques algorithmes et heuristiques permettant de maximiser le score.
 
-## Tri par score de librairie
+### Tri par score de librairie
 
 La première idée était d'attribuer un score à chaque librairie, qui consistait à sommer toutes les valeurs des livres de cette librairie.
 
@@ -89,7 +89,7 @@ Ce score ignorait donc le fait que l'on ne puisse pas ajouter tous les livres de
 
 A partir de ce score, la liste des librairies était triée, et c'était cet ordre qui était utilisé pour la solution.
 
-## Affectation des livres aux différentes librairies
+### Affectation des livres aux différentes librairies
 
 Pour affecter les livres aux librairies, on itérait sur chaque librairie et on appliquait ces deux étapes:
 
@@ -98,7 +98,7 @@ Pour affecter les livres aux librairies, on itérait sur chaque librairie et on 
 
 En combinant ces deux heuristiques, on obtient un score honorable.
 
-## Permutations aléatoires
+### Permutations aléatoires
 
 A partir des solutions générées, l'idée était de modifier aléatoirement ces solutions pour trouver de nouvelles solutions avec de meilleurs scores. 
 
@@ -134,9 +134,9 @@ il aurait été plus intéressant de remplacer la dernière condition par (ce qu
 
 {% endhighlight %}
 
-# Programmation entière
+## Programmation entière
 
-## Principe
+### Principe
 
 La programmation entière consiste à vérifier la faisabilité ou d'optimiser une fonction à partir d'un set de contraintes.
 
@@ -160,13 +160,13 @@ Les 5 premières lignes sont des lignes de contraintes, la dernière est la fonc
 
 Ce genre de problème est NP-complet (difficile à calculer), mais il existe des solveurs et algorithmes efficaces pour obtenir rapidement des solutions approchées ou optimales.
 
-## Or-tools
+### Or-tools
 
 Or-tools (découvert grâce à @MatthisHammel, ty!) est une libraire développée par Google et proposant des algorithmes d'optimisations, des solveurs etc...
 
 C'est l'outil que j'ai utilisé (la version python) pour définir mes problèmes de programmation entière.
 
-## Application au sujet
+### Application au sujet
 
 Je vais d'abord présenter la version que l'on a pu exploiter pour améliorer notre score, avant de présenter une version plus ambitieuse (mais qui ne fonctionne pas).
 
