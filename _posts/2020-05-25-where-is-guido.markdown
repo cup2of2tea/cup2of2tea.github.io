@@ -76,7 +76,7 @@ La première version se greffe en sortie du solveur que l'on avait déjà dével
 - On optimise seulement les livres qui sont affectés à telle ou telle librairie
 
 Pour cette version, une seule matrice de variables est définie:
-- book_is_in_librairie[][], la variable books_is_in_librairie[b][l] étant à 0 si le livre b est embarqué par la librairie l
+- bookIsInLibrairie[][], la variable bookIsInLibrairie[b][l] étant à 0 si le livre b est embarqué par la librairie l
 
 Pour avoir une matrice de dimension réduite, on applique l'optimisation suivante:
 - on ne garde que les livres qui sont au moins une fois dans les librairies de la solution
@@ -87,35 +87,35 @@ Un livre ne doit pas être présent dans plusieurs librairies:
 
 $ \text{Pour chaque livre b:} $
 
-$ 0 <= \sum_{l \in [0,L-1]}{ books\\_is\\_librairie[b][l]} <= 1 $
+$ 0 <= \sum_{l \in [0,L-1]}{ bookIsInLibrairie[b][l]} <= 1 $
 
 {% highlight python %}
 for b in range(B):
     constraint = solver.Constraint(0,1)
     for l in range(L):
         if(b not in libsBooks[l]):
-          constraint.SetCoefficient(books_is_librairie[b][l],1)
+          constraint.SetCoefficient(bookIsInLibrairie[b][l],1)
 {% endhighlight %}
 
 Un livre ne doit pas être ajouté dans une librairie qui ne le contient pas:
 
 $ \text{Pour chaque livre b:} $
 
-$ 0 <= \sum_{l \in [0,L-1] \land b \notin livres\\_de\\_librairie[l]}{ books\\_is\\_librairie[b][l]} <= 1 $
+$ 0 <= \sum_{l \in [0,L-1] \land b \notin livresDeLibrairie[l]}{ booksIsLibrairie[b][l]} <= 1 $
 
 {% highlight python %}
 for b in range(B):
     constraint = solver.Constraint(0,0)
     for l in range(L):
         if(books[b][l] not in libsBooks[l]):
-            constraint.SetCoefficient(books_is_librairie[b][l],1)
+            constraint.SetCoefficient(bookIsInLibrairie[b][l],1)
 {% endhighlight %}
 
 Si une librairie a terminé son inscription le jour d, alors elle ne peut pas scanner plus de $ (maxDays-d)*shipping $ livres.
 
 $ \text{Pour chaque librairie l:} $
 
-$ 0 <= \sum_{b \in [0,B-1]}{books\\_is\\_in\\ _librairie[b][l]} <= (maxDays-d) * shipping $
+$ 0 <= \sum_{b \in [0,B-1]}{bookIsInLibrairie[b][l]} <= (maxDays-d) * shipping $
 
 {% highlight python %}
 d = 0
@@ -123,6 +123,6 @@ for l in range(L):
     d += libsSignIn[l]
     constraint = solver.Constraint(0,max(0,(days-signIn)*libsShip[l]))
     for b in range(B):
-        constraint.SetCoefficient(books_is_librairie[b][l],1)
+        constraint.SetCoefficient(bookIsInLibrairie[b][l],1)
 {% endhighlight %}
 
