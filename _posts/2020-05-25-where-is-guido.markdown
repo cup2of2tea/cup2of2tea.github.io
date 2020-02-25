@@ -44,7 +44,7 @@ Les entrées étant assez simples, squelettor ne servit à rien.
 
 ### Teamwork
 
-Comme on l'avait prévu (et prévoir fut peut-être notre plus grosse erreur), @MrFlibble et @Matleg partirent sur l'analyse du code et la recherche d'heuristiques pendant que je préparais le code génétique exploitant les solutions obtenues.
+Comme on l'avait prévu (et prévoir fut peut-être notre plus grosse erreur), @MrFlibble et @Matleg partirent sur l'analyse du code et la recherche d'heuristiques pendant que je préparais le code génétique pour remixer leurs solutions obtenues.
 
 ## La revanche du créationnisme
 
