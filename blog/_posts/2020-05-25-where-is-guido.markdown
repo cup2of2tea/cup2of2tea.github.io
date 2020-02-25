@@ -40,7 +40,8 @@ Ensuite, viennent l'expression des contraintes de l'énoncé sous la forme d'in�
 Un livre ne doit pas être présent dans plusieurs librairies:
 {% highlight python %}
   Pour chaque livre b:
-    0 <= (La somme de books_is_in_librairie[b][l] avec l € [0,L-1]) <= 1
+
+    $$ 0 <= \sum_{l \in [0,L-1]}{ books\_is\_librairie[b][l]} <= 1 $$
 {% endhighlight %}
 
 {% highlight python %}
