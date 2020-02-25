@@ -17,10 +17,37 @@ aze
 
 <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
-$$ \nabla_\boldsymbol{x} J(\boldsymbol{x}) $$
 
 
 # Programmation entière
+
+## Principe
+
+La programmation entière consiste à vérifier la faisabilité ou d'optimiser une fonction à partir d'un set de contraintes.
+
+Les fonctions définissant les contraintes et la fonction à optimiser sont linéaires et dotées de variables restreintes à un domaine entier.
+
+Par exemple, ceci est un problème de progammation entière:
+
+$$ x >= 0 $$
+$$ y >= 0 $$
+$$ z >= 0 $$
+$$ 1 <= 2x + 3y <= 10 $$
+$$ 2 <= 1x + 4z <= 5 $$
+$$ Maximize 2x + 2y + 2z $$
+
+Les 5 premières lignes sont des lignes de contraintes, la dernière est la fonction d'optimisation.
+
+Ce genre de problème est NP-complet (difficile à calculer), mais il existe des solveurs et algorithmes efficaces pour obtenir rapidement des solutions approchées ou optimales.
+
+## Or-tools
+
+Or-tools (découvert grâce à @MatthisHammel, ty!) est une libraire développée par Google et proposant des algorithmes d'optimisations, des solveurs etc...
+
+C'est l'outil que j'ai utilisé (la version python) pour définir mes problèmes de programmation entière.
+
+## Application au sujet
+
 
 Je vais d'abord présenter la version que l'on a pu exploiter pour améliorer notre score, avant de présenter une version plus ambitieuse (mais qui ne fonctionne pas).
 
@@ -44,11 +71,11 @@ $$ \text{Pour chaque livre b:} $$
 $$ 0 <= \sum_{l \in [0,L-1]}{ books\_is\_librairie[b][l]} <= 1 $$
 
 {% highlight python %}
-for i in range(nbBooks):
+for b in range(B):
     constraint = solver.Constraint(0,1)
-    for j in range(len(outputOrder)):
-        if(books[i][1] not in libsBooks[outputOrder[d]]):
-          constraint.SetCoefficient(book_step[i][j],1)
+    for l in range(L):
+        if(b not in libsBooks[l]):
+          constraint.SetCoefficient(books_is_librairie[b][l],1)
 {% endhighlight %}
 
 Un livre ne doit pas être ajouté dans une librairie qui ne le contient pas:
@@ -58,27 +85,25 @@ $$ \text{Pour chaque livre b:} $$
 $$ 0 <= \sum_{l \in [0,L-1] \land b \notin livres_de_librairie[l]}{ books\_is\_librairie[b][l]} <= 1 $$
 
 {% highlight python %}
-for i in range(nbBooks):
+for b in range(B):
     constraint = solver.Constraint(0,0)
-    for d in range(len(outputOrder)):
-        if(books[i][1] not in libsBooks[outputOrder[d]]):
-            constraint.SetCoefficient(book_step[i][d],1)
+    for l in range(L):
+        if(books[b][l] not in libsBooks[l]):
+            constraint.SetCoefficient(books_is_librairie[b][l],1)
 {% endhighlight %}
 
 Si une librairie a terminé son inscription le jour d, alors elle ne peut pas scanner plus de $$ (maxDays-d)\*shipping $$ livres.
 
 $$ \text{Pour chaque librairie l:} $$
 
-$$ 0 <= \sum_{b \in [0,B-1]}{books_is_in_librairie[b][l]} <= (maxDays-d) * shipping $$
+$$ 0 <= \sum_{b \in [0,B-1]}{books\_is\_in\_librairie[b][l]} <= (maxDays-d) * shipping $$
 
 {% highlight python %}
-signIn = 0
-for i in range(len(outputOrder)):
-    signIn += libsDuration[outputOrder[i]]
-    # On ne peut pas en avoir plus que (jours - signIn)*libsShip
-    constraint = solver.Constraint(0,max(0,(days-signIn)*libsShip[outputOrder[i]]))
-    for j in range(nbBooks):
-        constraint.SetCoefficient(book_step[j][i],1)
-print(solver.NumConstraints())
+d = 0
+for l in range(L):
+    d += libsSignIn[l]
+    constraint = solver.Constraint(0,max(0,(days-signIn)*libsShip[l]))
+    for b in range(B):
+        constraint.SetCoefficient(books_is_librairie[b][l],1)
 {% endhighlight %}
 

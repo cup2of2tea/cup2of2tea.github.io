@@ -44,11 +44,11 @@ $$ \text{Pour chaque livre b:} $$
 $$ 0 <= \sum_{l \in [0,L-1]}{ books\_is\_librairie[b][l]} <= 1 $$
 
 {% highlight python %}
-for i in range(nbBooks):
+for b in range(B):
     constraint = solver.Constraint(0,1)
-    for j in range(len(outputOrder)):
-        if(books[i][1] not in libsBooks[outputOrder[d]]):
-          constraint.SetCoefficient(book_step[i][j],1)
+    for l in range(L):
+        if(b not in libsBooks[l]):
+          constraint.SetCoefficient(books_is_librairie[b][l],1)
 {% endhighlight %}
 
 Un livre ne doit pas être ajouté dans une librairie qui ne le contient pas:
@@ -58,27 +58,25 @@ $$ \text{Pour chaque livre b:} $$
 $$ 0 <= \sum_{l \in [0,L-1] \land b \notin livres_de_librairie[l]}{ books\_is\_librairie[b][l]} <= 1 $$
 
 {% highlight python %}
-for i in range(nbBooks):
+for b in range(B):
     constraint = solver.Constraint(0,0)
-    for d in range(len(outputOrder)):
-        if(books[i][1] not in libsBooks[outputOrder[d]]):
-            constraint.SetCoefficient(book_step[i][d],1)
+    for l in range(L):
+        if(books[b][l] not in libsBooks[l]):
+            constraint.SetCoefficient(books_is_librairie[b][l],1)
 {% endhighlight %}
 
 Si une librairie a terminé son inscription le jour d, alors elle ne peut pas scanner plus de $$ (maxDays-d)\*shipping $$ livres.
 
 $$ \text{Pour chaque librairie l:} $$
 
-$$ 0 <= \sum_{b \in [0,B-1]}{books_is_in_librairie[b][l]} <= (maxDays-d) * shipping $$
+$$ 0 <= \sum_{b \in [0,B-1]}{books\_is\_in\_librairie[b][l]} <= (maxDays-d) * shipping $$
 
 {% highlight python %}
-signIn = 0
-for i in range(len(outputOrder)):
-    signIn += libsDuration[outputOrder[i]]
-    # On ne peut pas en avoir plus que (jours - signIn)*libsShip
-    constraint = solver.Constraint(0,max(0,(days-signIn)*libsShip[outputOrder[i]]))
-    for j in range(nbBooks):
-        constraint.SetCoefficient(book_step[j][i],1)
-print(solver.NumConstraints())
+d = 0
+for l in range(L):
+    d += libsSignIn[l]
+    constraint = solver.Constraint(0,max(0,(days-signIn)*libsShip[l]))
+    for b in range(B):
+        constraint.SetCoefficient(books_is_librairie[b][l],1)
 {% endhighlight %}
 
