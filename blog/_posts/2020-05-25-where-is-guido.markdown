@@ -39,7 +39,7 @@ Ensuite, viennent l'expression des contraintes de l'énoncé sous la forme d'in�
 
 Un livre ne doit pas être présent dans plusieurs librairies:
 
-$$ \forall_{b \in [0-B-1]} $$
+$$ \text{Pour chaque livre b:} $$
 
 $$ 0 <= \sum_{l \in [0,L-1]}{ books\_is\_librairie[b][l]} <= 1 $$
 
@@ -52,10 +52,10 @@ for i in range(nbBooks):
 {% endhighlight %}
 
 Un livre ne doit pas être ajouté dans une librairie qui ne le contient pas:
-{% highlight python %}
-  Pour chaque livre b:
-    0 <= (La somme de books_is_in_librairie[b][l] avec l € [0,L-1] et b n\'appartient pas à l)  <= 0
-{% endhighlight %}
+
+$$ \text{Pour chaque livre b:} $$
+
+$$ 0 <= \sum_{l \in [0,L-1] \land b \notin livres_de_librairie[l]}{ books\_is\_librairie[b][l]} <= 1 $$
 
 {% highlight python %}
 for i in range(nbBooks):
@@ -65,11 +65,11 @@ for i in range(nbBooks):
             constraint.SetCoefficient(book_step[i][d],1)
 {% endhighlight %}
 
-Si une librairie a terminé son inscription le jour d, alors elle ne peut pas scanner plus de (maxDays-d)\*shipping livres.
-{% highlight python %}
-  Pour chaque librairie l:
-    0 <= (La somme de books_is_in_librairie[b][l] avec l € [0,L-1] et b n\'appartient pas à l)  <= (maxDays-d)*shipping
-{% endhighlight %}
+Si une librairie a terminé son inscription le jour d, alors elle ne peut pas scanner plus de $$ (maxDays-d)\*shipping $$ livres.
+
+$$ \text{Pour chaque librairie l:} $$
+
+$$ 0 <= \sum_{b \in [0,B-1]}{books_is_in_librairie[b][l]} <= (maxDays-d) * shipping $$
 
 {% highlight python %}
 signIn = 0
