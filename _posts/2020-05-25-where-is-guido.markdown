@@ -17,7 +17,7 @@ aze
 
 <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
-$ \nabla_\boldsymbol{x} J(\boldsymbol{x}) $
+$$ \nabla_\boldsymbol{x} J(\boldsymbol{x}) $$
 
 
 # Programmation entière
@@ -38,11 +38,9 @@ Pour avoir une matrice de dimension réduite, on applique l'optimisation suivant
 Ensuite, viennent l'expression des contraintes de l'énoncé sous la forme d'inégalités.
 
 Un livre ne doit pas être présent dans plusieurs librairies:
-{% highlight python %}
-  Pour chaque livre b:
 
-    $$ 0 <= \sum_{l \in [0,L-1]}{ books\_is\_librairie[b][l]} <= 1 $$
-{% endhighlight %}
+$$ \forall_{b \in [0-B-1]}
+$$ 0 <= \sum_{l \in [0,L-1]}{ books\_is\_librairie[b][l]} <= 1 $$
 
 {% highlight python %}
 for i in range(nbBooks):
