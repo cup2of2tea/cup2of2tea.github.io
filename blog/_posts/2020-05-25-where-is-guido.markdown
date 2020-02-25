@@ -53,7 +53,7 @@ $ 1 <= 2x + 3y <= 10 $
 
 $ 2 <= 1x + 4z <= 5 $
 
-$ Maximize 2x + 2y + 2z $
+$ \text{Maximize }2x + 2y + 2z $
 
 Les 5 premières lignes sont des lignes de contraintes, la dernière est la fonction d'optimisation.
 
@@ -85,9 +85,9 @@ Ensuite, viennent l'expression des contraintes de l'énoncé sous la forme d'in�
 
 Un livre ne doit pas être présent dans plusieurs librairies:
 
-$$ \text{Pour chaque livre b:} $$
+$ \text{Pour chaque livre b:} $
 
-$$ 0 <= \sum_{l \in [0,L-1]}{ books\_is\_librairie[b][l]} <= 1 $$
+$ 0 <= \sum_{l \in [0,L-1]}{ books\_is\_librairie[b][l]} <= 1 $
 
 {% highlight python %}
 for b in range(B):
@@ -99,9 +99,9 @@ for b in range(B):
 
 Un livre ne doit pas être ajouté dans une librairie qui ne le contient pas:
 
-$$ \text{Pour chaque livre b:} $$
+$ \text{Pour chaque livre b:} $
 
-$$ 0 <= \sum_{l \in [0,L-1] \land b \notin livres_de_librairie[l]}{ books\_is\_librairie[b][l]} <= 1 $$
+$ 0 <= \sum_{l \in [0,L-1] \land b \notin livres_de_librairie[l]}{ books\_is\_librairie[b][l]} <= 1 $
 
 {% highlight python %}
 for b in range(B):
@@ -111,11 +111,11 @@ for b in range(B):
             constraint.SetCoefficient(books_is_librairie[b][l],1)
 {% endhighlight %}
 
-Si une librairie a terminé son inscription le jour d, alors elle ne peut pas scanner plus de $$ (maxDays-d)*shipping $$ livres.
+Si une librairie a terminé son inscription le jour d, alors elle ne peut pas scanner plus de $ (maxDays-d)*shipping $ livres.
 
-$$ \text{Pour chaque librairie l:} $$
+$ \text{Pour chaque librairie l:} $
 
-$$ 0 <= \sum_{b \in [0,B-1]}{books\_is\_in\_librairie[b][l]} <= (maxDays-d) * shipping $$
+$ 0 <= \sum_{b \in [0,B-1]}{books\_is\_in\_librairie[b][l]} <= (maxDays-d) * shipping $
 
 {% highlight python %}
 d = 0
