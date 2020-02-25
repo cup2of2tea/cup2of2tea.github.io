@@ -18,19 +18,65 @@ aze
 
 # Programmation entière
 
+Je vais d'abord présenter la version que l'on a pu exploiter pour améliorer notre score, avant de présenter une version plus ambitieuse (mais qui ne fonctionne pas).
 
+La première version se greffe en sortie du solveur que l'on avait déjà développé, et récupère la sortie générée pour l'optimiser:
+
+- On garde les librairies et l'ordre dans lesquelles celles-ci ont été ajoutées
+- On optimise seulement les livres qui sont affectés à telle ou telle librairie
+
+Pour cette version, une seule matrice de variables est définie:
+- book_is_in_librairie[][], la variable books_is_in_librairie[b][l] étant à 0 si le livre b est embarqué par la librairie l
+
+Pour avoir une matrice de dimension réduite, on applique l'optimisation suivante:
+- on ne garde que les livres qui sont au moins une fois dans les librairies de la solution
+
+Ensuite, viennent l'expression des contraintes de l'énoncé sous la forme d'inégalités.
+
+Un livre ne doit pas être présent dans plusieurs librairies:
 {% highlight python %}
-def print_hi(name)
-  puts "Hi, #{name}"
-end
-print_hi('Tom')
-#=> prints 'Hi, Tom' to STDOUT.
+  Pour chaque livre b:
+    0 <= (La somme de books_is_in_librairie[b][l] avec l € [0,L-1]) <= 1
 {% endhighlight %}
 
+{% highlight python %}
+for i in range(nbBooks):
+    constraint = solver.Constraint(0,1)
+    for j in range(len(outputOrder)):
+        if(books[i][1] not in libsBooks[outputOrder[d]]):
+          constraint.SetCoefficient(book_step[i][j],1)
+{% endhighlight %}
 
+Un livre ne doit pas être ajouté dans une librairie qui ne le contient pas:
+{% highlight python %}
+  Pour chaque livre b:
+    0 <= (La somme de books_is_in_librairie[b][l] avec l € [0,L-1] et b n'appartient pas à l)  <= 0
+{% endhighlight %}
 
+{% highlight python %}
+for i in range(nbBooks):
+    constraint = solver.Constraint(0,0)
+    for d in range(len(outputOrder)):
+        if(books[i][1] not in libsBooks[outputOrder[d]]):
+            constraint.SetCoefficient(book_step[i][d],1)
+{% endhighlight %}
 
+Si une librairie a terminé son inscription le jour d, alors elle ne peut pas scanner plus de (maxDays-d)\*shipping livres.
+{% highlight python %}
+  Pour chaque librairie l:
+    0 <= (La somme de books_is_in_librairie[b][l] avec l € [0,L-1] et b n'appartient pas à l)  <= (maxDays-d)\*shipping
+{% endhighlight %}
 
+{% highlight python %}
+signIn = 0
+for i in range(len(outputOrder)):
+    signIn += libsDuration[outputOrder[i]]
+    # On ne peut pas en avoir plus que (jours - signIn)\*libsShip
+    constraint = solver.Constraint(0,max(0,(days-signIn)\*libsShip[outputOrder[i]]))
+    for j in range(nbBooks):
+        constraint.SetCoefficient(book_step[j][i],1)
+print(solver.NumConstraints())
+{% endhighlight %}
 
 
 You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
