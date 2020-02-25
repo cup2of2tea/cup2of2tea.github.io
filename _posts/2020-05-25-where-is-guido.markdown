@@ -44,7 +44,7 @@ Les entrées étant assez simples, squelettor ne servit à rien.
 
 ## Teamwork
 
-Comme on l'avait prévu (et prévoir fut peut-être notre erreur), @MrFlibble et @Matleg partirent sur l'analyse du code et la recherche d'heuristiques pendant que je préparais le code génétique exploitant les solutions obtenues.
+Comme on l'avait prévu (et prévoir fut peut-être notre plus grosse erreur), @MrFlibble et @Matleg partirent sur l'analyse du code et la recherche d'heuristiques pendant que je préparais le code génétique exploitant les solutions obtenues.
 
 # La revanche du créationnisme
 
@@ -77,7 +77,62 @@ Cela entraîne des discontinuités dans l'évaluation des individus, et l'on se 
 
 Le lien fort entre les librairies et les livres pose un problème de modélisation que je n'ai pas réussi à résoudre.
 
-# Pendant ce temps
+# Les heuristiques
+
+Pendant ce temps, @MrFlibble et @Matleg ont pu analysé les données d'entrée et développé quelques algorithmes et heuristiques permettant de maximiser le score.
+
+## Tri par score de librairie
+
+La première idée était d'attribuer un score à chaque librairie, qui consistait à sommer toutes les valeurs des livres de cette librairie.
+
+Ce score ignorait donc le fait que l'on ne puisse pas ajouter tous les livres de cette librairie mais donnait tout de même une base de départ convenable.
+
+A partir de ce score, la liste des librairies était triée, et c'était cet ordre qui était utilisé pour la solution.
+
+## Affectation des livres aux différentes librairies
+
+Pour affecter les livres aux librairies, on itérait sur chaque librairie et on appliquait ces deux étapes:
+
+- On calcule le nombre de livres que peut scanner cette librairie (en fonction des librairies déjà passées et du temps d'inscription de la librairie)
+- On affecte à cette librairie les livres qui n'ont pas encore été affecté et qui ont un score maximal
+
+En combinant ces deux heuristiques, on obtient un score honorable.
+
+## Permutations aléatoires
+
+A partir des solutions générées, l'idée était de modifier aléatoirement ces solutions pour trouver de nouvelles solutions avec de meilleurs scores. 
+
+L'idée était simplement de prendre un petit (10 éléments) intervalle dans la liste de librairie triée, réaliser une permutation aléatoire de cet intervalle, calculer le score et garder cette permutation pour la prochaine itération si le score est meilleur.
+
+Avec ça, nous avons pu atteindre notre score final de 24 000 160 points.
+
+Une faille à cette idée est que, si une permutation est réalisée vers la fin de la liste, comme cette permutation aura un impact nul sur le score, la permutation sera ignorée. Or, il peut y avoir un intérêt de remonter des éléments de fin de la liste avec des permutations successives pour trouver certaines solutions.
+
+Plutôt que de faire:
+
+{% highlight python %}
+
+while True:
+    testPermutation2 = triLibrairies.copy()
+    i = rand()%(N - 10)
+
+    testPermutation2[i:i+10] = random_shuffle(testPermutation2[i:i+10])
+
+    s = calculScore(testPermutation2)
+
+    if(s > bestScore):
+      triLibrairies = testPermutation2
+
+{% endhighlight %}
+
+il aurait été plus intéressant de remplacer la dernière condition par (ce qui a été fait pendant l'extended round):
+
+{% highlight python %}
+
+    if(s >= bestScore):
+      triLibrairies = testPermutation2
+
+{% endhighlight %}
 
 # Programmation entière
 
@@ -113,8 +168,9 @@ C'est l'outil que j'ai utilisé (la version python) pour définir mes problèmes
 
 ## Application au sujet
 
-
 Je vais d'abord présenter la version que l'on a pu exploiter pour améliorer notre score, avant de présenter une version plus ambitieuse (mais qui ne fonctionne pas).
+
+Pour des contraintes de taille de donnée, le solveur comme il a été développé ne peut s'appliquer qu'à l'entrée E (so many books).
 
 La première version se greffe en sortie du solveur que l'on avait déjà développé, et récupère la sortie générée pour l'optimiser:
 
