@@ -87,7 +87,7 @@ Un livre ne doit pas être présent dans plusieurs librairies:
 
 $ \text{Pour chaque livre b:} $
 
-$ 0 <= \sum_{l \in [0,L-1]}{ books\_is\_librairie[b][l]} <= 1 $
+$ 0 <= \sum_{l \in [0,L-1]}{ books\\_is\\_librairie[b][l]} <= 1 $
 
 {% highlight python %}
 for b in range(B):
@@ -101,7 +101,7 @@ Un livre ne doit pas être ajouté dans une librairie qui ne le contient pas:
 
 $ \text{Pour chaque livre b:} $
 
-$ 0 <= \sum_{l \in [0,L-1] \land b \notin livres_de_librairie[l]}{ books\_is\_librairie[b][l]} <= 1 $
+$ 0 <= \sum_{l \in [0,L-1] \land b \notin livres\\_de\\_librairie[l]}{ books\\_is\\_librairie[b][l]} <= 1 $
 
 {% highlight python %}
 for b in range(B):
@@ -115,7 +115,7 @@ Si une librairie a terminé son inscription le jour d, alors elle ne peut pas sc
 
 $ \text{Pour chaque librairie l:} $
 
-$ 0 <= \sum_{b \in [0,B-1]}{books\_is\_in\_librairie[b][l]} <= (maxDays-d) * shipping $
+$ 0 <= \sum_{b \in [0,B-1]}{books\\_is\\_in\\ _librairie[b][l]} <= (maxDays-d) * shipping $
 
 {% highlight python %}
 d = 0
