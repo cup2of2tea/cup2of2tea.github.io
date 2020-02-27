@@ -31,9 +31,9 @@ MathJax.Hub.Queue(function() {
 </script>
 <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
-## Le concours
+## Quelques jours avant la bataille
 
-### Nos utilitaires
+### Nos armes
 
 En préparation du concours, j'avais développé quelques programmes C++ :
 - un utilitaire (squelettor) générant des squelettes de programmes python et c++ (parser et classes) à partir d'un fichier décrivant les entrées
@@ -42,11 +42,11 @@ En préparation du concours, j'avais développé quelques programmes C++ :
 
 Les entrées étant assez simples, squelettor ne servit à rien.
 
-### Teamwork
+### Nos rôles
 
 Comme on l'avait prévu (et prévoir fut peut-être notre plus grosse erreur), @MrFlibble et @Matleg partirent sur l'analyse du code et la recherche d'heuristiques pendant que je préparais le code génétique pour remixer leurs solutions obtenues.
 
-## La revanche du créationnisme
+## Sur les traces de Darwin
 
 ### Le principe de l'algorithme génétique
 
@@ -54,16 +54,23 @@ L'algorithme génétique s'inspire des mécanismes biologiques de l'évolution:
 
 - On a un individu (la solution), composé de gènes (fragment de solution)
 - Cet individu peut connaître des mutations (ajout ou suppression de fragment de solution, modification d'un gene)
+<div style="text-align:center;width:500px">
+    <img src="/assets/img/Mutation.png"/>
+</div>
 - Pour chaque génération (itération), on a une population (un ensemble de solutions)
-- Pour générer la génération de l'itération suivante, on garde les individus présentant le plus de potentiel et on les croise pour générer de nouveaux individus
+- Pour générer la génération de l'itération suivante, on garde les individus présentant le plus de potentiel et on les croise pour générer de nouveaux individus en mixant leurs genes
+
+<div style="text-align:center;width:500px">
+    <img src="/assets/img/Croisement.png"/>
+</div>
 
 A force d'itérer, de garder les individus avec les meilleurs scores et d'introduire un peu d'aléatoire avec les croisements et mutations, on espère converger vers un optimum.
 
 ### Limitations
 
-
-<img src="/assets/img/genetic.gif"/>
-
+<div style="text-align:center;width:500px">
+    <img src="/assets/img/genetic.gif"/>
+</div>
 Après 2 h 10 de développement, j'ai fini la "base" de mon génétique.
 
 Mais deux problèmes apparaissent:
@@ -82,7 +89,7 @@ Le lien fort entre les librairies et les livres pose un problème de modélisati
 
 ## Les heuristiques
 
-Pendant ce temps, @MrFlibble et @Matleg ont pu analysé les données d'entrée et développé quelques algorithmes et heuristiques permettant de maximiser le score.
+Pendant ce temps, les lucides @MrFlibble et @Matleg purent analyser les données d'entrée et développer quelques algorithmes et heuristiques permettant d'obtenir des scores bien meilleurs qu'un simple aléatoire.
 
 ### Tri par score de librairie
 
@@ -100,6 +107,23 @@ Pour affecter les livres aux librairies, on itérait sur chaque librairie et on 
 - On affecte à cette librairie les livres qui n'ont pas encore été affecté et qui ont un score maximal
 
 En combinant ces deux heuristiques, on obtient un score honorable.
+
+### Mentions honorables
+
+Les cas de tests montraient de grandes disparités dans la répartition des valeurs (paramètres des librairies, valeurs des livres etc...). 
+L'intuition était donc qu'une heuristique pouvait s'appliquer à un cas en particulier mais pas aux autres. 
+
+Nous avons pu tester de nombreuses heuristiques, notamment dans l'ordonnancement des librairies:
+
+- Modifier la valeur des livres en fonction de leurs fréquences d'apparition dans les librairies
+- Trier les librairies par délai d'inscription
+- Trier les librairies par nombres de scan par jour
+- Trier les librairies avec un ratio des deux paramètres précédents
+- Des fonctions utilisant la combinaison de plein de variables, de fonctions logarithmiques ...
+
+Globalement, ces heuristiques n'ont pas fourni de résultats si probants. On obtenait parfois des états initiaux un peu meilleurs pour certains cas, mais restions loin des meilleurs scores.
+
+Je fus également victime d'autres soubresauts "AH MAIS ON PEUT FAIRE DES FLOTS NAN? TSAIS LA, DU MATCHING POUR LE SET COVERING?". Incompris de mes pairs, et doutant également de la pertinence de cette réflexion, cette voie ne fut pas plus explorée. Mais quand même.
 
 ### Permutations aléatoires
 
@@ -137,7 +161,17 @@ il aurait été plus intéressant de remplacer la dernière condition par (ce qu
 
 {% endhighlight %}
 
+
+Grâce à cet algorithme, je pus fixer ce code qui crachais de minis jackpot continuellement sous fond noir de terminal, déprimé de la défaite du génétique, pendant que @MrFlibble et @Matleg continuaient à se creuser les méninges pour trouver de nouvelles idées.
+
+<div style="text-align:center;width:500px">
+    <img src="/assets/img/casino.gif"/>
+</div>
+
 ## Programmation entière
+
+Après le concours, je me suis rappelé de l'article sur le blog h25.io (ty @Mathis et @Clement Hammel) qui parlait d'artillerie lourde. 
+Le problème me semblait modélisable, j'ai donc voulu tester.
 
 ### Principe
 
@@ -231,3 +265,20 @@ for l in range(L):
         constraint.SetCoefficient(bookIsInLibrairie[b][l],1)
 {% endhighlight %}
 
+
+En laissant tourner le solveur quelques minutes, la solution optimale était renvoyée. Il suffisait ensuite à partir des valeurs prises par les différentes variables, de générer la solution dans le format attendu.
+
+L'impact de ce solveur était limité (on ne gagnait en moyenne pas plus de 800 000 points en optimisant une solution non optimisée), mais c'était tout de même un exercice intéressant.
+
+
+## The end
+
+Voili voilou, c'est tout pour cet article. 
+
+Une seconde partie sera peut-être publiée pour expliquer d'autres idées plus avancées:
+
+- Un solveur plus complexe (mais pas fonctionnel)
+- La combinaison d'un solveur par mini-batchs avec mutations (idée fraîche pas encore testée, j'ai l'espoir qu'elle nous fasse atteindre les 27 200 000)
+- La visualisation de données, pour trouver des patterns, voir si on peut les exploiter
+
+Gl&hf
