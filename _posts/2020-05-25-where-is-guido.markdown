@@ -54,22 +54,22 @@ L'algorithme génétique s'inspire des mécanismes biologiques de l'évolution:
 
 - On a un individu (la solution), composé de gènes (fragment de solution)
 - Cet individu peut connaître des mutations (ajout ou suppression de fragment de solution, modification d'un gene)
-<div style="text-align:center;width:300px">
-    <img src="/assets/img/Mutation.png"/>
+<div style="text-align:center">
+    <img style="width:300px" src="/assets/img/Mutation.png"/>
 </div>
 - Pour chaque génération (itération), on a une population (un ensemble de solutions)
 - Pour générer la génération de l'itération suivante, on garde les individus présentant le plus de potentiel et on les croise pour générer de nouveaux individus en mixant leurs genes
 
-<div style="text-align:center;width:300px">
-    <img src="/assets/img/Croisement.png"/>
+<div style="text-align:center;">
+    <img style="width:300px" src="/assets/img/Croisement.png"/>
 </div>
 
 A force d'itérer, de garder les individus avec les meilleurs scores et d'introduire un peu d'aléatoire avec les croisements et mutations, on espère converger vers un optimum.
 
 ### Limitations
 
-<div style="text-align:center;width:500px">
-    <img src="/assets/img/genetic.gif"/>
+<div style="text-align:center">
+    <img  style="width:500px"src="/assets/img/genetic.gif"/>
 </div>
 Après 2 h 10 de développement, j'ai fini la "base" de mon génétique.
 
@@ -164,8 +164,8 @@ il aurait été plus intéressant de remplacer la dernière condition par (ce qu
 
 Grâce à cet algorithme, je pus fixer ce code qui crachais de minis jackpot continuellement sous fond noir de terminal, déprimé de la défaite du génétique, pendant que @MrFlibble et @Matleg continuaient à se creuser les méninges pour trouver de nouvelles idées.
 
-<div style="text-align:center;width:500px">
-    <img src="/assets/img/casino.gif"/>
+<div style="text-align:center">
+    <img style="width:500px" src="/assets/img/casino.gif"/>
 </div>
 
 ## Programmation entière
