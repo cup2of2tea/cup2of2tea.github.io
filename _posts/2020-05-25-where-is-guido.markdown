@@ -275,11 +275,25 @@ L'impact de ce solveur était limité (on ne gagnait en moyenne pas plus de 800 
 
 Voili voilou, c'est tout pour cet article. 
 
+Pour info, après avoir appliqué tout ça (heuristiques, mutations et solveur), on a pu atteindre les 27 106 605 points. 
+A savoir qu'avec cette solution (même si on l'avait magiquement codée à l'avance), le score n'aurait pas été atteint en concours: les mutations crachent de nouveaux scores au bout de très longues périodes de run, et en exploitant des états obtenus lors de précédents runs.
+
+L'objectif n'était donc pas de donner un exemple de bonne solution à coder pour le concours, mais plus des idées ici et là, un exemple d'expérience du concours, et le genre d'erreur à ne pas faire.
+
+Personnellement, je retiens notamment la leçon suivante:
+- Rusher et s'acharner sur une solution (génétique ici) sans avoir posé de réflexion sur le papier, c'est mal
+
+Mais on espère pouvoir revenir en force l'année prochaine.
+
+### La suite
+
 Une seconde partie sera peut-être publiée pour expliquer d'autres idées plus avancées:
 
 - Un solveur plus complexe (mais pas fonctionnel)
 - La combinaison d'un solveur par mini-batchs avec mutations (idée fraîche pas encore testée, j'ai l'espoir qu'elle nous fasse atteindre les 27 200 000)
 - La visualisation de données, pour trouver des patterns, voir si on peut les exploiter
+
+### Vous pouvez reprendre une activité normale
 
 En espérant que ça ait vous ai fait découvrir quelques trucs par ci par là, inspiré des idées ou motivé à nous rejoindre sur le concours de l'an prochain.
 
