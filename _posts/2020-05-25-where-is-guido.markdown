@@ -62,7 +62,7 @@ A force d'itérer, de garder les individus avec les meilleurs scores et d'introd
 ### Limitations
 
 
-<img src="assets/genetic.gif"/>
+<img src="assets/img/genetic.gif"/>
 
 Après 2 h 10 de développement, j'ai fini la "base" de mon génétique.
 
