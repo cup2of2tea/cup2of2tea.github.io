@@ -69,7 +69,7 @@ A force d'itérer, de garder les individus avec les meilleurs scores et d'introd
 ### Limitations
 
 <div style="text-align:center">
-    <img  style="width:500px"src="/assets/img/genetic.gif"/>
+    <img  style="width:500px" src="/assets/img/genetic.gif"/>
 </div>
 Après 2 h 10 de développement, j'ai fini la "base" de mon génétique.
 
@@ -199,7 +199,7 @@ Ce genre de problème est NP-complet (difficile à calculer), mais il existe des
 
 ### Or-tools
 
-Or-tools (découvert grâce à @MatthisHammel, ty!) est une libraire développée par Google et proposant des algorithmes d'optimisations, des solveurs etc...
+Or-tools est une libraire développée par Google et proposant des algorithmes d'optimisations, des solveurs etc...
 
 C'est l'outil que j'ai utilisé (la version python) pour définir mes problèmes de programmation entière.
 
