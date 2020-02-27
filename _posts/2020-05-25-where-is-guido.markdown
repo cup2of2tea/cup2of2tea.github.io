@@ -268,7 +268,7 @@ for l in range(L):
 
 En laissant tourner le solveur quelques minutes, la solution optimale était renvoyée. Il suffisait ensuite à partir des valeurs prises par les différentes variables, de générer la solution dans le format attendu.
 
-L'impact de ce solveur était limité (on ne gagnait en moyenne pas plus de 800 000 points en optimisant une solution non optimisée), mais c'était tout de même un exercice intéressant.
+L'impact de ce solveur était limité (on ne gagnait en moyenne pas plus de 800 000 points en optimisant une solution non optimisée), mais c'était tout de même un chouette exercice, et une découverte sympa de or-tools.
 
 
 ## The end
