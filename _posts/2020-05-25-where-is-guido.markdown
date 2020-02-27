@@ -66,7 +66,7 @@ L'algorithme génétique s'inspire des mécanismes biologiques de l'évolution:
 
 A force d'itérer, de garder les individus avec les meilleurs scores et d'introduire un peu d'aléatoire avec les croisements et mutations, on espère converger vers un optimum.
 
-### Limitations
+### La revanche du créationisme
 
 <div style="text-align:center">
     <img  style="width:500px" src="/assets/img/genetic.gif"/>
