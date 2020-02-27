@@ -54,13 +54,13 @@ L'algorithme génétique s'inspire des mécanismes biologiques de l'évolution:
 
 - On a un individu (la solution), composé de gènes (fragment de solution)
 - Cet individu peut connaître des mutations (ajout ou suppression de fragment de solution, modification d'un gene)
-<div style="text-align:center;width:500px">
+<div style="text-align:center;width:300px">
     <img src="/assets/img/Mutation.png"/>
 </div>
 - Pour chaque génération (itération), on a une population (un ensemble de solutions)
 - Pour générer la génération de l'itération suivante, on garde les individus présentant le plus de potentiel et on les croise pour générer de nouveaux individus en mixant leurs genes
 
-<div style="text-align:center;width:500px">
+<div style="text-align:center;width:300px">
     <img src="/assets/img/Croisement.png"/>
 </div>
 
@@ -281,4 +281,6 @@ Une seconde partie sera peut-être publiée pour expliquer d'autres idées plus 
 - La combinaison d'un solveur par mini-batchs avec mutations (idée fraîche pas encore testée, j'ai l'espoir qu'elle nous fasse atteindre les 27 200 000)
 - La visualisation de données, pour trouver des patterns, voir si on peut les exploiter
 
-Gl&hf
+En espérant que ça ait vous ai fait découvrir quelques trucs par ci par là, inspiré des idées ou motivé à nous rejoindre sur le concours de l'an prochain.
+
+Gl&Hf!
