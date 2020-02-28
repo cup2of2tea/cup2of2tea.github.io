@@ -62,7 +62,7 @@ Les entrées étant assez simples, squelettor ne servit à rien durant le concou
 
 Avant le concours, nous avions prévu de scinder l'équipe de cette manière:
 - @MrFlibble et @Matleg développaient un / des programmes en Python pour générer des solutions initiales, avec des heuristiques
-- Je récupérais leurs résultats, recodait leurs heuristiques en C++ dans ma fonction d'évaluation pour lancer un algorithme génétique, en initialisant mes populations avec leurs solutions
+- Je récupérais leurs résultats, recodais leurs heuristiques en C++ dans ma fonction d'évaluation pour lancer un algorithme génétique, en initialisant mes populations avec leurs solutions
 
 On le verra après, mais le fait de prévoir de base de faire un algorithme génétique sans même avoir lu l'énoncé fut une assez grave erreur.
 
@@ -182,7 +182,7 @@ while True:
 
 {% endhighlight %}
 
-il aurait été plus intéressant de remplacer la dernière condition par (ce qui a été fait pendant l'extended round):
+il aurait donc été plus intéressant de remplacer la dernière condition par (ce qui a été fait pendant l'extended round):
 
 {% highlight python %}
     if(s >= bestScore):
@@ -235,11 +235,11 @@ $ \text{Maximize }2x + 2y + 2z $
 
 Les 5 premières lignes sont des lignes de contraintes, la dernière est la fonction d'optimisation.
 
-Ce genre de problème, dans le cas où les variables prennent des valeurs entières, est NP-complet (difficile à calculer), mais il existe des solveurs et algorithmes efficaces pour obtenir rapidement des solutions approchées ou optimales.
+Ce genre de problème, dans le cas où les variables prennent des valeurs entières, est NP-complet (difficile à résoudre), mais il existe des solveurs et algorithmes efficaces pour obtenir rapidement des solutions approchées ou optimales.
 
 ### Or-tools
 
-Or-tools est une libraire développée par Google et proposant des algorithmes d'optimisations, des solveurs etc...
+<a href="https://developers.google.com/optimization">Or-tools</a> est une libraire développée par Google et proposant des algorithmes d'optimisations, des solveurs etc...
 
 C'est l'outil que j'ai utilisé (la version python) pour définir mes problèmes de programmation entière.
 
@@ -248,7 +248,7 @@ C'est l'outil que j'ai utilisé (la version python) pour définir mes problèmes
 Je vais d'abord présenter la version que l'on a pu exploiter pour améliorer notre score, avant de présenter une version plus ambitieuse (mais qui ne fonctionne pas).
 
 
-Pour des contraintes de taille de donnée, le solveur comme il a été développé ne peut s'appliquer qu'à l'entrée E (so many books).
+Pour des contraintes de taille de données, le solveur comme il a été développé ne peut s'appliquer qu'à l'entrée E (so many books).
 
 La première version se greffe en sortie du solveur que l'on avait déjà développé, et récupère la sortie générée pour l'optimiser:
 
