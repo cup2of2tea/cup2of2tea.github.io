@@ -15,7 +15,7 @@ En dernière partie, on verra ensemble comment appliquer une méthode de program
 <style TYPE="text/css">
 code.has-jax {font: inherit; font-size: 100%; background: inherit; border: inherit;}
 .constraintBlock {
-    margin: 5px;   
+    padding: 5px;   
     background-color: #f1c3c3;
 }
 
