@@ -14,6 +14,17 @@ En dernière partie, on verra ensemble comment appliquer une méthode de program
 
 <style TYPE="text/css">
 code.has-jax {font: inherit; font-size: 100%; background: inherit; border: inherit;}
+.constraintBlock {
+    margin: 5px;   
+    background-color: #f1c3c3;
+}
+
+.separator{ width: 100%;
+    height: -1px;
+    border-top: #00000069 solid 1px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
 </style>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -255,8 +266,9 @@ Définissons les constantes que je vais utiliser:
 Ensuite, viennent l'expression des contraintes de l'énoncé sous la forme d'inégalités.
 
 
-<div style="background-color:#f1c3c3">
+<div class="constraintBlock">
 Un livre ne doit pas être présent dans plusieurs librairies:
+<div class="separator"></div>
 <div>
 $ \text{Pour chaque livre b:} $
 
@@ -272,8 +284,9 @@ for b in range(B):
           constraint.SetCoefficient(bookIsInLibrairie[b][l],1)
 {% endhighlight %}
 
-<div style="background-color:#f1c3c3">
+<div class="constraintBlock">
 Un livre ne doit pas être ajouté dans une librairie qui ne le contient pas:
+<div class="separator"></div>
 <div>
 $ \text{Pour chaque livre b:} $
 
@@ -288,8 +301,9 @@ for b in range(B):
             constraint.SetCoefficient(bookIsInLibrairie[b][l],1)
 {% endhighlight %}
 
-<div style="background-color:#f1c3c3">
+<div class="constraintBlock">
 Une librairie a une limite de livres qu'elle peut scanner, en fonction de la date de fin d'inscription $d$, et du nombre de livres qu'elle peut scanner par jour.
+    <div class="separator"></div>
 <div>
 $ \text{Pour chaque librairie l:} $
 
