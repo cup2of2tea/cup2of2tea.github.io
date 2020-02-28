@@ -308,7 +308,9 @@ for l in range(L):
 
 Finalement, on décrit la fonction que l'on cherche à optimiser.
 
+<div style="background-color:#fdeeb8">
 $ \text{Maximize } \sum_{b \in [0,B-1], l \in [0,L-1]}{bookIsInLibrairie[b][l]*value[b]} $
+</div>
 
 {% highlight python %}
 objective = solver.Objective()
