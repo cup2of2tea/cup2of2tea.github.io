@@ -239,17 +239,17 @@ Pour avoir une matrice de dimension réduite, on applique l'optimisation suivant
 
 Définissons les constantes que je vais utiliser:
 
-$ maxDays \text{: Le nombre total de jours pendant lesquels on peut scanner des livres / s'inscrire à des librairies} $
+- $ maxDays $ : Le nombre total de jours pendant lesquels on peut scanner des livres / s'inscrire à des librairies}
 
-$ B \text{: Le nombre total de livres uniques considérés (contenus dans au moins une librairie)} $
+- $ B $: Le nombre total de livres uniques considérés (contenus dans au moins une librairie)}
 
-$ value \text{: Le tableau de dimension B décrivant la valeur des livres} $
+- $ value $: Le tableau de dimension B décrivant la valeur des livres}
 
-$ L \text{: Le nombre total de librairies de la solution à optimiser} $
+- $ L $: Le nombre total de librairies de la solution à optimiser}
 
-$ signIn \text{: Le tableau de dimension L décrivant la durée d'inscription pour une librairie} $
+- $ signIn $: Le tableau de dimension L décrivant la durée d'inscription pour une librairie}
 
-$ shipping \text{: Le tableau de dimension L décrivant le nombre de livres que l'on peut scanner par jour pour une librairie} $
+- $ shipping $: Le tableau de dimension L décrivant le nombre de livres que l'on peut scanner par jour pour une librairie}
 
 Ensuite, viennent l'expression des contraintes de l'énoncé sous la forme d'inégalités.
 
