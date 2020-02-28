@@ -256,9 +256,11 @@ Ensuite, viennent l'expression des contraintes de l'énoncé sous la forme d'in�
 
 Un livre ne doit pas être présent dans plusieurs librairies:
 
+<div style="background-color:#f1c3c3">
 $ \text{Pour chaque livre b:} $
 
 $ 0 <= \sum_{l \in [0,L-1]}{ bookIsInLibrairie[b][l]} <= 1 $
+</div>
 
 {% highlight python %}
 for b in range(B):
@@ -268,9 +270,9 @@ for b in range(B):
           constraint.SetCoefficient(bookIsInLibrairie[b][l],1)
 {% endhighlight %}
 
+<div style="background-color:#f1c3c3">
 Un livre ne doit pas être ajouté dans une librairie qui ne le contient pas:
 
-<div style="background-color:#b2ceea">
 $ \text{Pour chaque livre b:} $
 
 $ 0 <= \sum_{l \in [0,L-1] \land b \notin livresDeLibrairie[l]}{ booksIsLibrairie[b][l]} <= 0 $
@@ -285,9 +287,11 @@ for b in range(B):
 
 Si une librairie a terminé son inscription le jour d, alors elle ne peut pas scanner plus de $ (maxDays-d)*shipping $ livres.
 
+<div style="background-color:#f1c3c3">
 $ \text{Pour chaque librairie l:} $
 
 $ 0 <= \sum_{b \in [0,B-1]}{bookIsInLibrairie[b][l]} <= (maxDays-d) * shipping[l] $
+</div>
 
 {% highlight python %}
 d = 0
