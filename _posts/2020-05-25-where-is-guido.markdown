@@ -289,7 +289,7 @@ for b in range(B):
 {% endhighlight %}
 
 <div style="background-color:#f1c3c3">
-Si une librairie a terminé son inscription le jour d, alors elle ne peut pas scanner plus de $ (maxDays-d)*shipping $ livres.
+Une librairie a une limite de livres qu'elle peut scanner, en fonction de la date de fin d'inscription $d$, et du nombre de livres qu'elle peut scanner par jour.
 <div>
 $ \text{Pour chaque librairie l:} $
 
