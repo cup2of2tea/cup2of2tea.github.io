@@ -254,12 +254,14 @@ Définissons les constantes que je vais utiliser:
 
 Ensuite, viennent l'expression des contraintes de l'énoncé sous la forme d'inégalités.
 
-Un livre ne doit pas être présent dans plusieurs librairies:
 
 <div style="background-color:#f1c3c3">
+Un livre ne doit pas être présent dans plusieurs librairies:
+<div>
 $ \text{Pour chaque livre b:} $
 
 $ 0 <= \sum_{l \in [0,L-1]}{ bookIsInLibrairie[b][l]} <= 1 $
+</div>
 </div>
 
 {% highlight python %}
@@ -272,10 +274,11 @@ for b in range(B):
 
 <div style="background-color:#f1c3c3">
 Un livre ne doit pas être ajouté dans une librairie qui ne le contient pas:
-
+<div>
 $ \text{Pour chaque livre b:} $
 
 $ 0 <= \sum_{l \in [0,L-1] \land b \notin livresDeLibrairie[l]}{ booksIsLibrairie[b][l]} <= 0 $
+</div>
 </div>
 {% highlight python %}
 for b in range(B):
@@ -285,12 +288,13 @@ for b in range(B):
             constraint.SetCoefficient(bookIsInLibrairie[b][l],1)
 {% endhighlight %}
 
-Si une librairie a terminé son inscription le jour d, alors elle ne peut pas scanner plus de $ (maxDays-d)*shipping $ livres.
-
 <div style="background-color:#f1c3c3">
+Si une librairie a terminé son inscription le jour d, alors elle ne peut pas scanner plus de $ (maxDays-d)*shipping $ livres.
+<div>
 $ \text{Pour chaque librairie l:} $
 
 $ 0 <= \sum_{b \in [0,B-1]}{bookIsInLibrairie[b][l]} <= (maxDays-d) * shipping[l] $
+</div>
 </div>
 
 {% highlight python %}
