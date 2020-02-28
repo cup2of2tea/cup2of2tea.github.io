@@ -212,15 +212,21 @@ Les fonctions définissant les contraintes et la fonction à optimiser sont lin�
 Par exemple, ceci est un problème de progammation entière:
 
 <div class="constraintBlock">
+<div>
 $ x >= 0 $
-
+</div>
+<div>
 $ y >= 0 $
-
+</div>
+<div>
 $ z >= 0 $
-
+</div>
+<div>
 $ 1 <= 2x + 3y <= 10 $
-
+</div>
+<div>
 $ 2 <= 1x + 4z <= 5 $
+</div>
 </div>
 
 <div class="objectiveBlock">
