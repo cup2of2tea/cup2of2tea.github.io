@@ -20,7 +20,8 @@ MathJax.Hub.Config({
     tex2jax: {
         inlineMath: [['$','$'], ['\\(','\\)']],
         skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'] // removed 'code' entry
-    }
+    },
+    "HTML-CSS": { linebreaks: {automatic: true, width:"container"}}
 });
 MathJax.Hub.Queue(function() {
     var all = MathJax.Hub.getAllJax(), i;
