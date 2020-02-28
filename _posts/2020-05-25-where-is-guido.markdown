@@ -301,7 +301,11 @@ Finalement, on décrit la fonction que l'on cherche à optimiser.
 $ \text{Maximize } \sum_{b \in [0,B-1], l \in [0,L-1]}{bookIsInLibrairie[b][l]*value[b]} $
 
 {% highlight python %}
-#todo
+objective = solver.Objective()
+for l in range(L):
+    for b in range(B):
+        objective.SetCoefficient(bookIsInLibrairie[b][l],value[b])
+objective.SetMaximization()
 {% endhighlight %}
 
 
