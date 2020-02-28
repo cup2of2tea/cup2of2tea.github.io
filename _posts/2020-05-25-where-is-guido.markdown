@@ -18,6 +18,10 @@ code.has-jax {font: inherit; font-size: 100%; background: inherit; border: inher
     padding: 5px;   
     background-color: #f1c3c3;
 }
+.objectiveBlock {
+    padding: 5px;   
+    background-color: #fdeeb8;
+}
 
 .separator{ width: 100%;
     height: -1px;
@@ -207,6 +211,7 @@ Les fonctions définissant les contraintes et la fonction à optimiser sont lin�
 
 Par exemple, ceci est un problème de progammation entière:
 
+<div class="constraintBlock">
 $ x >= 0 $
 
 $ y >= 0 $
@@ -216,8 +221,11 @@ $ z >= 0 $
 $ 1 <= 2x + 3y <= 10 $
 
 $ 2 <= 1x + 4z <= 5 $
+</div>
 
+<div class="objectiveBlock">
 $ \text{Maximize }2x + 2y + 2z $
+</div>
 
 Les 5 premières lignes sont des lignes de contraintes, la dernière est la fonction d'optimisation.
 
@@ -322,7 +330,7 @@ for l in range(L):
 
 Finalement, on décrit la fonction que l'on cherche à optimiser.
 
-<div style="background-color:#fdeeb8">
+<div class="objectiveBlock">
 $ \text{Maximize } \sum_{b \in [0,B-1], l \in [0,L-1]}{bookIsInLibrairie[b][l]*value[b]} $
 </div>
 
