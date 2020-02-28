@@ -175,7 +175,7 @@ il aurait été plus intéressant de remplacer la dernière condition par (ce qu
 {% endhighlight %}
 
 
-Grâce à cet algorithme, je pus fixer ce code qui crachais de minis jackpot continuellement sous fond noir de terminal, déprimé de la défaite du génétique, pendant que @MrFlibble et @Matleg continuaient à se creuser les méninges pour trouver de nouvelles idées.
+Grâce à cet algorithme, je pus fixer ce code qui crachait de minis jackpot continuellement sous fond noir de terminal, déprimé de la défaite du génétique, pendant que @MrFlibble et @Matleg continuaient à se creuser les méninges pour trouver de nouvelles idées.
 
 <div style="text-align:center">
     <img style="width:500px" src="/assets/img/casino.gif"/>
@@ -183,8 +183,9 @@ Grâce à cet algorithme, je pus fixer ce code qui crachais de minis jackpot con
 
 ## Programmation entière
 
-Après le concours, je me suis rappelé de l'article sur le blog h25.io (ty @Mathis et @Clement Hammel) qui parlait d'artillerie lourde. 
-Le problème me semblait modélisable, j'ai donc voulu tester.
+Après le concours, je me suis rappelé de <a href="https://blog.h25.io/HashCode-Part1/">l'article</a> sur le blog <a href="https://blog.h25.io/">h25.io</a> (ty @Mathis et @Clement Hammel) qui parlait des solutions d'artillerie lourde, à base notamment d'Or-tools. 
+
+Le problème me semblait modélisable sous la forme d'un problème de programmation entière, j'ai donc voulu tester cette intuition.
 
 ### Principe
 
@@ -208,7 +209,7 @@ $ \text{Maximize }2x + 2y + 2z $
 
 Les 5 premières lignes sont des lignes de contraintes, la dernière est la fonction d'optimisation.
 
-Ce genre de problème est NP-complet (difficile à calculer), mais il existe des solveurs et algorithmes efficaces pour obtenir rapidement des solutions approchées ou optimales.
+Ce genre de problème, dans le cas où les variables prennent des valeurs entières, est NP-complet (difficile à calculer), mais il existe des solveurs et algorithmes efficaces pour obtenir rapidement des solutions approchées ou optimales.
 
 ### Or-tools
 
@@ -220,6 +221,7 @@ C'est l'outil que j'ai utilisé (la version python) pour définir mes problèmes
 
 Je vais d'abord présenter la version que l'on a pu exploiter pour améliorer notre score, avant de présenter une version plus ambitieuse (mais qui ne fonctionne pas).
 
+
 Pour des contraintes de taille de donnée, le solveur comme il a été développé ne peut s'appliquer qu'à l'entrée E (so many books).
 
 La première version se greffe en sortie du solveur que l'on avait déjà développé, et récupère la sortie générée pour l'optimiser:
@@ -227,11 +229,27 @@ La première version se greffe en sortie du solveur que l'on avait déjà dével
 - On garde les librairies et l'ordre dans lesquelles celles-ci ont été ajoutées
 - On optimise seulement les livres qui sont affectés à telle ou telle librairie
 
+
+
 Pour cette version, une seule matrice de variables est définie:
 - $ bookIsInLibrairie[][] $ , la variable $ bookIsInLibrairie[b][l] $ étant à $ 0 $ si le livre $ b $ est embarqué par la librairie $ l $
 
 Pour avoir une matrice de dimension réduite, on applique l'optimisation suivante:
 - on ne garde que les livres qui sont au moins une fois dans les librairies de la solution
+
+Définissons les constantes que je vais utiliser:
+
+$ maxDays \text{: Le nombre total de jours pendant lesquels on peut scanner des livres / s'inscrire à des librairies} $
+
+$ B \text{: Le nombre total de livres uniques considérés (contenus dans au moins une librairie)} $
+
+$ value \text{: Le tableau de dimension B décrivant la valeur des livres} $
+
+$ L \text{: Le nombre total de librairies de la solution à optimiser} $
+
+$ signIn \text{: Le tableau de dimension L décrivant la durée d'inscription pour une librairie} $
+
+$ shipping \text{: Le tableau de dimension L décrivant le nombre de livres que l'on peut scanner par jour pour une librairie} $
 
 Ensuite, viennent l'expression des contraintes de l'énoncé sous la forme d'inégalités.
 
@@ -245,7 +263,7 @@ $ 0 <= \sum_{l \in [0,L-1]}{ bookIsInLibrairie[b][l]} <= 1 $
 for b in range(B):
     constraint = solver.Constraint(0,1)
     for l in range(L):
-        if(b not in libsBooks[l]):
+        if(b in libsBooks[l]):
           constraint.SetCoefficient(bookIsInLibrairie[b][l],1)
 {% endhighlight %}
 
@@ -253,13 +271,13 @@ Un livre ne doit pas être ajouté dans une librairie qui ne le contient pas:
 
 $ \text{Pour chaque livre b:} $
 
-$ 0 <= \sum_{l \in [0,L-1] \land b \notin livresDeLibrairie[l]}{ booksIsLibrairie[b][l]} <= 1 $
+$ 0 <= \sum_{l \in [0,L-1] \land b \notin livresDeLibrairie[l]}{ booksIsLibrairie[b][l]} <= 0 $
 
 {% highlight python %}
 for b in range(B):
     constraint = solver.Constraint(0,0)
     for l in range(L):
-        if(books[b][l] not in libsBooks[l]):
+        if(b not in libsBooks[l]):
             constraint.SetCoefficient(bookIsInLibrairie[b][l],1)
 {% endhighlight %}
 
@@ -267,22 +285,29 @@ Si une librairie a terminé son inscription le jour d, alors elle ne peut pas sc
 
 $ \text{Pour chaque librairie l:} $
 
-$ 0 <= \sum_{b \in [0,B-1]}{bookIsInLibrairie[b][l]} <= (maxDays-d) * shipping $
+$ 0 <= \sum_{b \in [0,B-1]}{bookIsInLibrairie[b][l]} <= (maxDays-d) * shipping[l] $
 
 {% highlight python %}
 d = 0
 for l in range(L):
-    d += libsSignIn[l]
-    constraint = solver.Constraint(0,max(0,(days-signIn)*libsShip[l]))
+    d += signIn[l]
+    constraint = solver.Constraint(0,max(0,(maxDays-d)*shipping[l]))
     for b in range(B):
         constraint.SetCoefficient(bookIsInLibrairie[b][l],1)
 {% endhighlight %}
 
+Finalement, on décrit la fonction que l'on cherche à optimiser.
 
-En laissant tourner le solveur quelques minutes, la solution optimale était renvoyée. Il suffisait ensuite à partir des valeurs prises par les différentes variables, de générer la solution dans le format attendu.
+$ \text{Maximize } \sum_{b \in [0,B-1], l \in [0,L-1]}{bookIsInLibrairie[b][l]*value[b]} $
 
-L'impact de ce solveur était limité (on ne gagnait en moyenne pas plus de 800 000 points en optimisant une solution non optimisée), mais c'était tout de même un chouette exercice, et une découverte sympa de or-tools.
+{% highlight python %}
+#todo
+{% endhighlight %}
 
+
+En laissant tourner le solveur quelques minutes, la solution optimale est renvoyée. Il suffit ensuite à partir des valeurs prises par les différentes variables, de générer la solution dans le format attendu.
+
+L'impact de ce solveur est limité (on ne gagnait en moyenne pas plus de 800 000 points en optimisant une solution non optimisée), mais c'était tout de même un chouette exercice, et une belle découverte de or-tools.
 
 ## The end
 
