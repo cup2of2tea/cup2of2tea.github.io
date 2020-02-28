@@ -269,9 +269,10 @@ for b in range(B):
 
 Un livre ne doit pas être ajouté dans une librairie qui ne le contient pas:
 
-$ \text{Pour chaque livre b:} $
 
-$ 0 <= \sum_{l \in [0,L-1] \land b \notin livresDeLibrairie[l]}{ booksIsLibrairie[b][l]} <= 0 $
+$ \colorbox{red}{\text{Pour chaque livre b:}\newline
+
+ 0 <= \sum_{l \in [0,L-1] \land b \notin livresDeLibrairie[l]}{ booksIsLibrairie[b][l]} <= 0 }$
 
 {% highlight python %}
 for b in range(B):
