@@ -5,22 +5,38 @@ date:   2020-02-25 22:00 +0100
 categories: jekyll update
 ---
 
-Jeudi 20 février s'était déroulé une compétition d'optimisation algorithmique "Google Hash Code".
-Insalgo nous a accueilli à son hub, @matleg, @MrFlibble et moi-même (@cup_of_tea).
+Jeudi 20 février s'était déroulée une compétition d'optimisation algorithmique "Google Hash Code".
+Insalgo nous a accueillis à son hub, @matleg, @MrFlibble et moi-même (@cup_of_what).
 
-Cet article a pour but de retracer notre cheminement durant le concours, aussi bien que les impasses et les bonnes pistes.
-En deuxième partie, on verra ensemble comment appliquer une méthode de programmation particulière (programmation entière) au problème, et si cela fonctionne.
+Cet article a pour but de retracer notre cheminement durant le concours, aussi bien les impasses que les bonnes pistes.
+En dernière partie, on verra ensemble comment appliquer une méthode de programmation particulière (programmation entière) au problème, et si cela fonctionne.
 
 
 <style TYPE="text/css">
 code.has-jax {font: inherit; font-size: 100%; background: inherit; border: inherit;}
+.constraintBlock {
+    padding: 5px;   
+    background-color: #f1c3c3;
+}
+.objectiveBlock {
+    padding: 5px;   
+    background-color: #fdeeb8;
+}
+
+.separator{ width: 100%;
+    height: -1px;
+    border-top: #00000069 solid 1px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
 </style>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
     tex2jax: {
         inlineMath: [['$','$'], ['\\(','\\)']],
         skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'] // removed 'code' entry
-    }
+    },
+    "HTML-CSS": { linebreaks: {automatic: true, width:"container"}}
 });
 MathJax.Hub.Queue(function() {
     var all = MathJax.Hub.getAllJax(), i;
@@ -40,11 +56,15 @@ En préparation du concours, j'avais développé quelques programmes C++ :
 - une librairie générique d'algorithme génétique
 - des runners et un métarunner, permettant de lancer le code génétique (en variant les entrées et paramètres)
 
-Les entrées étant assez simples, squelettor ne servit à rien.
+Les entrées étant assez simples, squelettor ne servit à rien durant le concours.
 
 ### Nos rôles
 
-Comme on l'avait prévu (et prévoir fut peut-être notre plus grosse erreur), @MrFlibble et @Matleg partirent sur l'analyse du code et la recherche d'heuristiques pendant que je préparais le code génétique pour remixer leurs solutions obtenues.
+Avant le concours, nous avions prévu de scinder l'équipe de cette manière:
+- @MrFlibble et @Matleg développaient un / des programmes en Python pour générer des solutions initiales, avec des heuristiques
+- Je récupérais leurs résultats, recodais leurs heuristiques en C++ dans ma fonction d'évaluation pour lancer un algorithme génétique, en initialisant mes populations avec leurs solutions
+
+On le verra après, mais le fait de prévoir de base de faire un algorithme génétique sans même avoir lu l'énoncé fut une assez grave erreur.
 
 ## Sur les traces de Darwin
 
@@ -75,13 +95,15 @@ Après 2 h 10 de développement, j'ai fini la "base" de mon génétique.
 
 Mais deux problèmes apparaissent:
 
-- Les données sont trop lourdes: 10^5 librairies, 10^5 livres, parfois 10^5 livres pour une librairie ... Ca segfault, ça me force à faire des populations avec de très petites tailles (et donc limite la variété de la population), ça freeze, crash...
+- Les données sont trop lourdes: 10^5 librairies, 10^5 livres, parfois 10^5 livres pour une librairie ... Ça segfault, ça freeze, crash, ça me force à faire des populations avec de très petites tailles (et donc limite la variété de la population)...
 
 - Et quand ça veut bien marcher, ça ne converge pas, du moins pas assez. 
 
 Pour le second problème, cela vient surement de la modélisation:
 
-Comme j'effectue des mutations qui consistent à supprimer/ajouter/modifier des librairies, mais que mes livres sont très liés à la présence et l'ordre des librairies, à chaque fois qu'un gêne librairie est ajouté, je regénère mes gênes de livres associés à cette librairie.
+Comme j'effectue des mutations qui consistent à supprimer/ajouter/modifier des librairies, mais que mes livres sont très liés à la présence et l'ordre des librairies, à chaque fois qu'un gêne librairie est ajouté, j'ai deux choix: 
+- Soit je stocke un ordre de livres quelque part pour cette librairie (mais dans ce cas l'ordre peut être extrêmement mauvais, en fonction du reste des librairies présentes)
+- Soit je regénère mes genes de livres associés à cette librairie avec une heuristique naïve, et l'on perd continuellement les sous structures optimales trouvées précédemment
 
 Cela entraîne des discontinuités dans l'évaluation des individus, et l'on se retrouve bloqué sur des optimums locaux pour lesquels les mutations sont rares.
 
@@ -106,7 +128,7 @@ Pour affecter les livres aux librairies, on itérait sur chaque librairie et on 
 - On calcule le nombre de livres que peut scanner cette librairie (en fonction des librairies déjà passées et du temps d'inscription de la librairie)
 - On affecte à cette librairie les livres qui n'ont pas encore été affecté et qui ont un score maximal
 
-En combinant ces deux heuristiques, on obtient un score honorable.
+En combinant ces deux heuristiques, on obtient un score correct.
 
 ### Mentions honorables
 
@@ -123,13 +145,15 @@ Nous avons pu tester de nombreuses heuristiques, notamment dans l'ordonnancement
 
 Globalement, ces heuristiques n'ont pas fourni de résultats si probants. On obtenait parfois des états initiaux un peu meilleurs pour certains cas, mais restions loin des meilleurs scores.
 
-Je fus également victime d'autres soubresauts "AH MAIS ON PEUT FAIRE DES FLOTS NAN? TSAIS LA, DU MATCHING POUR LE SET COVERING?". Incompris de mes pairs, et doutant également de la pertinence de cette réflexion, cette voie ne fut pas plus explorée. Mais quand même.
+Je fus également victime de quelques soubresauts "AH MAIS ON PEUT FAIRE DES FLOTS NAN? TSAIS LA, DU MATCHING POUR LE SET COVERING?". Incompris de mes pairs, et doutant également de la pertinence de cette réflexion, cette voie ne fut pas plus explorée. Mais quand même.
 
 ### Permutations aléatoires
 
 A partir des solutions générées, l'idée était de modifier aléatoirement ces solutions pour trouver de nouvelles solutions avec de meilleurs scores. 
 
 L'idée était simplement de prendre un petit (10 éléments) intervalle dans la liste de librairie triée, réaliser une permutation aléatoire de cet intervalle, calculer le score et garder cette permutation pour la prochaine itération si le score est meilleur.
+
+On peut considérer que c'est une forme d'hill climbing.
 
 Avec ça, nous avons pu atteindre notre score final de 24 000 160 points.
 
@@ -140,29 +164,34 @@ Plutôt que de faire:
 {% highlight python %}
 
 while True:
-    testPermutation2 = triLibrairies.copy()
+
+    testPermutation = triLibrairies.copy()
+    # On choisit un indice au hasard entre 0 et N-11
     i = rand()%(N - 10)
 
-    testPermutation2[i:i+10] = random_shuffle(testPermutation2[i:i+10])
+    # On fait une permutation aléatoire de l'intervalle
+    testPermutation[i:i+10] = random_shuffle(testPermutation[i:i+10])
 
-    s = calculScore(testPermutation2)
+    # On caclule le score obtenu avec nos heuristiques de distribution
+    s = calculScore(testPermutation)
 
+    # Si le score est meilleur
     if(s > bestScore):
-      triLibrairies = testPermutation2
+      # On conserve cette permutation pour la prochaine itération.
+      triLibrairies = testPermutation
 
 {% endhighlight %}
 
-il aurait été plus intéressant de remplacer la dernière condition par (ce qui a été fait pendant l'extended round):
+il aurait donc été plus intéressant de remplacer la dernière condition par (ce qui a été fait pendant l'extended round):
 
 {% highlight python %}
-
     if(s >= bestScore):
       triLibrairies = testPermutation2
 
 {% endhighlight %}
 
 
-Grâce à cet algorithme, je pus fixer ce code qui crachais de minis jackpot continuellement sous fond noir de terminal, déprimé de la défaite du génétique, pendant que @MrFlibble et @Matleg continuaient à se creuser les méninges pour trouver de nouvelles idées.
+Grâce à cet algorithme, je pus fixer ce code qui crachait de minis jackpot continuellement sous fond noir de terminal, déprimé de la défaite du génétique, pendant que @MrFlibble et @Matleg continuaient à se creuser les méninges pour trouver de nouvelles idées.
 
 <div style="text-align:center">
     <img style="width:500px" src="/assets/img/casino.gif"/>
@@ -170,8 +199,9 @@ Grâce à cet algorithme, je pus fixer ce code qui crachais de minis jackpot con
 
 ## Programmation entière
 
-Après le concours, je me suis rappelé de l'article sur le blog h25.io (ty @Mathis et @Clement Hammel) qui parlait d'artillerie lourde. 
-Le problème me semblait modélisable, j'ai donc voulu tester.
+Après le concours, je me suis rappelé de <a href="https://blog.h25.io/HashCode-Part1/">l'article</a> sur le blog <a href="https://blog.h25.io/">h25.io</a> (ty @Mathis et @Clement Hammel) qui parlait des solutions d'artillerie lourde, à base notamment d'Or-tools. 
+
+Le problème me semblait modélisable sous la forme d'un problème de programmation entière, j'ai donc voulu tester cette intuition.
 
 ### Principe
 
@@ -181,25 +211,35 @@ Les fonctions définissant les contraintes et la fonction à optimiser sont lin�
 
 Par exemple, ceci est un problème de progammation entière:
 
+<div class="constraintBlock">
+<div>
 $ x >= 0 $
-
+</div>
+<div>
 $ y >= 0 $
-
+</div>
+<div>
 $ z >= 0 $
-
+</div>
+<div>
 $ 1 <= 2x + 3y <= 10 $
-
+</div>
+<div>
 $ 2 <= 1x + 4z <= 5 $
+</div>
+</div>
 
+<div class="objectiveBlock">
 $ \text{Maximize }2x + 2y + 2z $
+</div>
 
 Les 5 premières lignes sont des lignes de contraintes, la dernière est la fonction d'optimisation.
 
-Ce genre de problème est NP-complet (difficile à calculer), mais il existe des solveurs et algorithmes efficaces pour obtenir rapidement des solutions approchées ou optimales.
+Ce genre de problème, dans le cas où les variables prennent des valeurs entières, est NP-complet (difficile à résoudre), mais il existe des solveurs et algorithmes efficaces pour obtenir rapidement des solutions approchées ou optimales.
 
 ### Or-tools
 
-Or-tools est une libraire développée par Google et proposant des algorithmes d'optimisations, des solveurs etc...
+<a href="https://developers.google.com/optimization">Or-tools</a> est une libraire développée par Google et proposant des algorithmes d'optimisations, des solveurs etc...
 
 C'est l'outil que j'ai utilisé (la version python) pour définir mes problèmes de programmation entière.
 
@@ -207,12 +247,15 @@ C'est l'outil que j'ai utilisé (la version python) pour définir mes problèmes
 
 Je vais d'abord présenter la version que l'on a pu exploiter pour améliorer notre score, avant de présenter une version plus ambitieuse (mais qui ne fonctionne pas).
 
-Pour des contraintes de taille de donnée, le solveur comme il a été développé ne peut s'appliquer qu'à l'entrée E (so many books).
+
+Pour des contraintes de taille de données, le solveur comme il a été développé ne peut s'appliquer qu'à l'entrée E (so many books).
 
 La première version se greffe en sortie du solveur que l'on avait déjà développé, et récupère la sortie générée pour l'optimiser:
 
 - On garde les librairies et l'ordre dans lesquelles celles-ci ont été ajoutées
 - On optimise seulement les livres qui sont affectés à telle ou telle librairie
+
+
 
 Pour cette version, une seule matrice de variables est définie:
 - $ bookIsInLibrairie[][] $ , la variable $ bookIsInLibrairie[b][l] $ étant à $ 0 $ si le livre $ b $ est embarqué par la librairie $ l $
@@ -220,56 +263,95 @@ Pour cette version, une seule matrice de variables est définie:
 Pour avoir une matrice de dimension réduite, on applique l'optimisation suivante:
 - on ne garde que les livres qui sont au moins une fois dans les librairies de la solution
 
+Définissons les constantes que je vais utiliser:
+
+- $ maxDays $ : Le nombre total de jours pendant lesquels on peut scanner des livres / s'inscrire à des librairies}
+
+- $ B $ : Le nombre total de livres uniques considérés (contenus dans au moins une librairie)}
+
+- $ value $ : Le tableau de dimension B décrivant la valeur des livres}
+
+- $ L $ : Le nombre total de librairies de la solution à optimiser}
+
+- $ signIn $ : Le tableau de dimension L décrivant la durée d'inscription pour une librairie}
+
+- $ shipping $ : Le tableau de dimension L décrivant le nombre de livres que l'on peut scanner par jour pour une librairie}
+
 Ensuite, viennent l'expression des contraintes de l'énoncé sous la forme d'inégalités.
 
-Un livre ne doit pas être présent dans plusieurs librairies:
 
+<div class="constraintBlock">
+Un livre ne doit pas être présent dans plusieurs librairies:
+<div class="separator"></div>
+<div>
 $ \text{Pour chaque livre b:} $
 
 $ 0 <= \sum_{l \in [0,L-1]}{ bookIsInLibrairie[b][l]} <= 1 $
+</div>
+</div>
 
 {% highlight python %}
 for b in range(B):
     constraint = solver.Constraint(0,1)
     for l in range(L):
-        if(b not in libsBooks[l]):
+        if(b in libsBooks[l]):
           constraint.SetCoefficient(bookIsInLibrairie[b][l],1)
 {% endhighlight %}
 
+<div class="constraintBlock">
 Un livre ne doit pas être ajouté dans une librairie qui ne le contient pas:
-
+<div class="separator"></div>
+<div>
 $ \text{Pour chaque livre b:} $
 
-$ 0 <= \sum_{l \in [0,L-1] \land b \notin livresDeLibrairie[l]}{ booksIsLibrairie[b][l]} <= 1 $
-
+$ 0 <= \sum_{l \in [0,L-1] \land b \notin livresDeLibrairie[l]}{ booksIsLibrairie[b][l]} <= 0 $
+</div>
+</div>
 {% highlight python %}
 for b in range(B):
     constraint = solver.Constraint(0,0)
     for l in range(L):
-        if(books[b][l] not in libsBooks[l]):
+        if(b not in libsBooks[l]):
             constraint.SetCoefficient(bookIsInLibrairie[b][l],1)
 {% endhighlight %}
 
-Si une librairie a terminé son inscription le jour d, alors elle ne peut pas scanner plus de $ (maxDays-d)*shipping $ livres.
-
+<div class="constraintBlock">
+Une librairie a une limite de livres qu'elle peut scanner, en fonction de la date de fin d'inscription $d$, et du nombre de livres qu'elle peut scanner par jour.
+    <div class="separator"></div>
+<div>
 $ \text{Pour chaque librairie l:} $
 
-$ 0 <= \sum_{b \in [0,B-1]}{bookIsInLibrairie[b][l]} <= (maxDays-d) * shipping $
+$ 0 <= \sum_{b \in [0,B-1]}{bookIsInLibrairie[b][l]} <= (maxDays-d) * shipping[l] $
+</div>
+</div>
 
 {% highlight python %}
 d = 0
 for l in range(L):
-    d += libsSignIn[l]
-    constraint = solver.Constraint(0,max(0,(days-signIn)*libsShip[l]))
+    d += signIn[l]
+    constraint = solver.Constraint(0,max(0,(maxDays-d)*shipping[l]))
     for b in range(B):
         constraint.SetCoefficient(bookIsInLibrairie[b][l],1)
 {% endhighlight %}
 
+Finalement, on décrit la fonction que l'on cherche à optimiser.
 
-En laissant tourner le solveur quelques minutes, la solution optimale était renvoyée. Il suffisait ensuite à partir des valeurs prises par les différentes variables, de générer la solution dans le format attendu.
+<div class="objectiveBlock">
+$ \text{Maximize } \sum_{b \in [0,B-1], l \in [0,L-1]}{bookIsInLibrairie[b][l]*value[b]} $
+</div>
 
-L'impact de ce solveur était limité (on ne gagnait en moyenne pas plus de 800 000 points en optimisant une solution non optimisée), mais c'était tout de même un chouette exercice, et une découverte sympa de or-tools.
+{% highlight python %}
+objective = solver.Objective()
+for l in range(L):
+    for b in range(B):
+        objective.SetCoefficient(bookIsInLibrairie[b][l],value[b])
+objective.SetMaximization()
+{% endhighlight %}
 
+
+En laissant tourner le solveur quelques minutes, la solution optimale est renvoyée. Il suffit ensuite à partir des valeurs prises par les différentes variables, de générer la solution dans le format attendu.
+
+L'impact de ce solveur est limité (on ne gagnait en moyenne pas plus de 800 000 points en optimisant une solution non optimisée), mais c'était tout de même un chouette exercice, et une belle découverte de or-tools.
 
 ## The end
 
