@@ -1,0 +1,71 @@
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+}
+
+.constraintBlock {
+    padding: 5px;
+    background-color: #f1c3c3;
+}
+
+.objectiveBlock {
+    padding: 5px;
+    background-color: #fdeeb8;
+}
+
+.separator {
+    width: 100%;
+    height: -1px;
+    border-top: #00000069 solid 1px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.wrapperArticle {
+    max-width: 900px;
+    text-align: center;
+    margin: auto;
+}
+
+.article{
+    text-align: left;
+    padding: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.blockArticle {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    line-height: 23px;
+}
+
+h1,h2,h3{
+    font-weight:400;
+}
+
+
+h1{
+    font-size: 32px;
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+
+h2{
+    font-size:26px;
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+
+h3{
+    font-size:18px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+.post-title {
+    font-size: 42px;
+    letter-spacing: -1px;
+    line-height: 1;
+}

@@ -1,0 +1,572 @@
+<section>
+    <div class="wrapperArticle">
+
+        <div class="article">
+            <h1 class="post-title ">
+                Where is Guido
+            </h1>
+
+            <div class="blockArticle">
+                Jeudi 20 février s'était déroulée une compétition d'optimisation algorithmique "Google Hash Code".<br />
+                Insalgo nous a accueillis à son hub, @matleg, @MrFlibble et moi-même (@cup_of_what).
+            </div>
+
+            <div class="blockArticle">
+                Cet article a pour but de retracer notre cheminement durant le concours, aussi bien les impasses que les
+                bonnes pistes. <br />
+                En dernière partie, on verra ensemble comment appliquer une méthode de programmation particulière
+                (programmation entière) au problème, et si cela fonctionne.
+            </div>
+
+            <h1> Quelques jours avant la bataille</h1>
+            <h2> Nos armes</h2>
+            <div class="blockArticle">
+                En préparation du concours, j'avais développé quelques programmes C++ :
+                <ul>
+                    <li>
+                        un utilitaire (squelettor) générant des squelettes de programmes python et c++ (parser et
+                        classes) à
+                        partir d'un fichier décrivant les entrées
+                    </li>
+                    <li>
+                        une librairie générique d'algorithme génétique
+                    </li>
+                    <li>
+                        des runners et un métarunner, permettant de lancer le code génétique (en variant les entrées et
+                        paramètres)
+                    </li>
+                </ul>
+            </div>
+
+            <div class="blockArticle">
+                Les entrées étant assez simples, squelettor ne servit à rien durant le concours.
+            </div>
+            <h2> Nos rôles</h2>
+            <div class="blockArticle">
+                Avant le concours, nous avions prévu de scinder l'équipe de cette manière:
+                <ul>
+                    <li>
+                        @MrFlibble et @Matleg développaient un / des programmes en Python pour générer des solutions
+                        initiales, avec des heuristiques
+                    </li>
+                    <li>Je récupérais leurs résultats, recodais leurs heuristiques en C++ dans ma fonction d'évaluation
+                        pour
+                        lancer un
+                        algorithme génétique, en initialisant mes populations avec leurs solutions
+                    </li>
+                </ul>
+            </div>
+            <div class="blockArticle">
+                On le verra après, mais le fait de prévoir de base de faire un algorithme génétique sans même avoir lu
+                l'énoncé fut une assez grave erreur.
+            </div>
+
+            <h1> Sur les traces de Darwin</h1>
+            <h2> Le principe de l'algorithme génétique</h2>
+            <div class="blockArticle">
+                L'algorithme génétique s'inspire des mécanismes biologiques de l'évolution:
+            </div>
+            <div class="blockArticle">
+                <ul>
+                    <li> On a un individu (la solution), composé de gènes (fragment de solution)</li>
+                    <li> Cet individu peut connaître des mutations (ajout ou suppression de fragment de solution,
+                        modification d'un
+                        gene)</li>
+                    <div style="text-align:center">
+                        <img style="width:300px" src="/assets/img/Mutation.png" />
+                    </div>
+                    <li> Pour chaque génération (itération), on a une population (un ensemble de solutions)</li>
+                    <li> Pour générer la génération de l'itération suivante, on garde les individus présentant le plus
+                        de potentiel et on les croise pour générer de nouveaux individus en mixant leurs genes
+                    </li>
+                    <div style="text-align:center;">
+                        <img style="width:300px" src="/assets/img/Croisement.png" />
+                    </div>
+                </ul>
+            </div>
+            <div class="blockArticle">
+                A force d'itérer, de garder les individus avec les meilleurs scores et d'introduire un peu d'aléatoire
+                avec les croisements et mutations, on espère converger vers un optimum.
+            </div>
+
+            <h2> La revanche du créationisme</h2>
+            <div style="text-align:center">
+                <img style="width:500px" src="/assets/img/genetic.gif" />
+            </div>
+            <div class="blockArticle">
+                Après 2 h 10 de développement, j'ai fini la "base" de mon génétique.
+            </div>
+
+            <div class="blockArticle">
+                Mais deux problèmes apparaissent:
+            </div>
+            <ul>
+                <li>
+                    Les données sont trop lourdes: 10^5 librairies, 10^5 livres, parfois 10^5 livres pour une
+                    librairie... <br />
+                    Ça segfault, ça freeze, crash, ça me force à faire des populations avec de très petites tailles (et
+                    donc limite la variété de la population)...
+                </li>
+
+                <li>
+                    Et quand ça veut bien marcher, ça ne converge pas, du moins pas assez.
+                </li>
+            </ul>
+            <div class="blockArticle">
+                Pour le second problème, cela vient surement de la modélisation:
+            </div>
+            <div class="blockArticle">
+                Comme j'effectue des mutations qui consistent à supprimer/ajouter/modifier des librairies, mais que mes
+                livres
+                sont
+                très liés à la présence et l'ordre des librairies, à chaque fois qu'un gêne librairie est ajouté, j'ai
+                deux
+                choix:
+                <ul>
+                    <li>
+                        Soit je stocke un ordre de livres quelque part pour cette librairie (mais dans ce cas l'ordre
+                        peut être extrêmement mauvais, en fonction du reste des librairies présentes)
+                    </li>
+                    <li>
+                        Soit je regénère mes genes de livres associés à cette librairie avec une heuristique naïve, et
+                        l'on perd continuellement les sous structures optimales trouvées précédemment
+                    </li>
+                </ul>
+            </div>
+            <div class="blockArticle">
+                Cela entraîne des discontinuités dans l'évaluation des individus, et l'on se retrouve bloqué sur des
+                optimums locaux
+                pour lesquels les mutations sont rares.<br />
+                Le lien fort entre les librairies et les livres pose un problème de modélisation que je n'ai pas réussi
+                à résoudre.
+            </div>
+            <h1> Les heuristiques</h1>
+            <div class="blockArticle">
+                Pendant ce temps, les lucides @MrFlibble et @Matleg purent analyser les données d'entrée et développer
+                quelques algorithmes et heuristiques permettant d'obtenir des scores bien meilleurs qu'un simple
+                aléatoire.
+            </div>
+
+            <h2> Tri par score de librairie</h2>
+
+            <div class="blockArticle">
+                La première idée était d'attribuer un score à chaque librairie, qui consistait à sommer toutes les
+                valeurs
+                des livres de cette librairie.<br />
+
+                Ce score ignorait donc le fait que l'on ne puisse pas ajouter tous les livres de cette librairie mais
+                donnait tout de même une base de départ convenable.
+            </div>
+            <div class="blockArticle">
+
+                A partir de ce score, la liste des librairies était triée, et c'était cet ordre qui était utilisé pour
+                la
+                solution.
+            </div>
+
+            <h2> Affectation des livres aux différentes librairies</h2>
+            <div class="blockArticle">
+                Pour affecter les livres aux librairies, on itérait sur chaque librairie et on appliquait ces deux
+                étapes:
+
+                <ul>
+                    <li>
+                        On calcule le nombre de livres que peut scanner cette librairie (en fonction des librairies déjà
+                        passées
+                        et du
+                        temps d'inscription de la librairie)
+                    </li>
+                    <li>
+                        On affecte à cette librairie les livres qui n'ont pas encore été affecté et qui ont un score
+                        maximal
+                    </li>
+                </ul>
+            </div>
+            En combinant ces deux heuristiques, on obtient un score correct.
+
+            <h2> Mentions honorables</h2>
+            <div class="blockArticle">
+                Les cas de tests montraient de grandes disparités dans la répartition des valeurs (paramètres des
+                librairies,
+                valeurs des livres etc...).
+                L'intuition était donc qu'une heuristique pouvait s'appliquer à un cas en particulier mais pas aux
+                autres.
+            </div>
+
+            <div class="blockArticle">
+                Nous avons pu tester de nombreuses heuristiques, notamment dans l'ordonnancement des librairies:
+
+                <ul>
+                    <li>
+                        Modifier la valeur des livres en fonction de leurs fréquences d'apparition dans les librairies
+                    </li>
+                    <li>
+                        Trier les librairies par délai d'inscription
+                    </li>
+                    <li>
+                        Trier les librairies par nombres de scan par jour
+                    </li>
+                    <li>
+                        Trier les librairies avec un ratio des deux paramètres précédents
+                    </li>
+                    <li>
+                        Des fonctions utilisant la combinaison de plein de variables, de fonctions logarithmiques ...
+                    </li>
+                </ul>
+            </div>
+            <div class="blockArticle">
+                Globalement, ces heuristiques n'ont pas fourni de résultats si probants. On
+                obtenait parfois des états
+                initiaux
+                un
+                peu meilleurs pour certains cas, mais restions loin des meilleurs scores.
+            </div>
+
+            <div class="blockArticle">
+                Je fus également victime de quelques soubresauts "AH MAIS ON PEUT FAIRE DES FLOTS NAN? TSAIS LA, DU
+                MATCHING
+                POUR LE
+                SET COVERING?". Incompris de mes pairs, et doutant également de la pertinence de cette réflexion, cette
+                voie ne fut
+                pas plus explorée. Mais quand même.
+            </div>
+
+            <h2> Permutations aléatoires</h2>
+            <div class="blockArticle">
+                A partir des solutions générées, l'idée était de modifier aléatoirement ces solutions pour trouver de
+                nouvelles
+                solutions avec de meilleurs scores.
+            </div>
+            <div class="blockArticle">
+                L'idée était simplement de prendre un petit (10 éléments) intervalle dans la liste de librairie triée,
+                réaliser
+                une
+                permutation aléatoire de cet intervalle, calculer le score et garder cette permutation pour la prochaine
+                itération
+                si le score est meilleur.<br />
+                On peut considérer que c'est une forme d'hill climbing.<br />
+
+                Avec ça, nous avons pu atteindre notre score final de 24 000 160 points.<br />
+            </div>
+            <div class="blockArticle">
+                Une faille à cette idée est que, si une permutation est réalisée vers la fin de la liste, comme cette
+                permutation
+                aura un impact nul sur le score, la permutation sera ignorée. Or, il peut y avoir un intérêt de remonter
+                des
+                éléments de fin de la liste avec des permutations successives pour trouver certaines solutions.
+            </div>
+            Plutôt que de faire:
+
+            <pre class="line-numbers language-python"><code > while True:
+    testPermutation = triLibrairies.copy()
+    # On choisit un indice au hasard entre 0 et N-11 i = rand()%(N - 10)
+
+    # On fait une permutation aléatoire de l'intervalle testPermutation[i:i+10] =
+    random_shuffle(testPermutation[i:i+10])
+
+    # On caclule le score obtenu avec nos heuristiques de distribution s = calculScore(testPermutation)
+
+    # Si le score est meilleur if(s > bestScore):
+    # On conserve cette permutation pour la prochaine itération. triLibrairies = testPermutation</code></pre>
+
+            il aurait donc été plus intéressant de remplacer la dernière condition par (ce qui a été fait pendant
+            l'extended
+            round):
+            <pre class="line-numbers language-python"><code >if(s >= bestScore):
+    triLibrairies = testPermutation2</code></pre>
+
+            Grâce à cet algorithme, je pus fixer ce code qui crachait de minis jackpot continuellement sous fond
+            noir de
+            terminal, déprimé de la défaite du génétique, pendant que @MrFlibble et @Matleg continuaient à se
+            creuser
+            les
+            méninges pour trouver de nouvelles idées.
+
+            <div style="text-align:center">
+                <img style="width:500px" src="/assets/img/casino.gif" />
+            </div>
+
+            <h1> Programmation entière</h1>
+            Après le concours, je me suis rappelé de <a href="https://blog.h15.io/HashCode-Part1/">l'article</a> sur
+            le
+            blog
+            <a href="https://blog.h15.io/">h15.io</a> (ty @Mathis et @Clement Hammel) qui parlait des solutions
+            d'artillerie
+            lourde, à base notamment d'Or-tools.<br />
+
+            Le problème me semblait modélisable sous la forme d'un problème de programmation entière, j'ai donc
+            voulu
+            tester
+            cette intuition.
+
+            <h2> Principe</h2>
+            <div class="blockArticle">
+                La programmation entière consiste à vérifier la faisabilité ou d'optimiser une fonction à partir d'un
+                set de
+                contraintes.<br />
+
+                Les fonctions définissant les contraintes et la fonction à optimiser sont linéaires et dotées de
+                variables
+                restreintes à un domaine entier.
+            </div>
+
+            <div class="blockArticle">
+                Par exemple, ceci est un problème de progammation entière:
+
+                <div class="constraintBlock">
+                    <div>
+                        <ng-katex [equation]="equations[0]"></ng-katex>
+                    </div>
+                    <div>
+                        <ng-katex [equation]="equations[1]"></ng-katex>
+                    </div>
+                    <div>
+                        <ng-katex [equation]="equations[2]"></ng-katex>
+                    </div>
+                    <div>
+                        <ng-katex [equation]="equations[3]"></ng-katex>
+                    </div>
+                    <div>
+                        <ng-katex [equation]="equations[4]"></ng-katex>
+                    </div>
+                </div>
+                <div class="objectiveBlock">
+                    <ng-katex [equation]="equations[5]"></ng-katex>
+                </div>
+
+                Les 5 premières lignes sont des lignes de contraintes, la dernière est la fonction d'optimisation.
+            </div>
+            <div class="blockArticle">
+                Ce genre de problème, dans le cas où les variables prennent des valeurs entières, est NP-complet
+                (difficile
+                à
+                résoudre), mais il existe des solveurs et algorithmes efficaces pour obtenir rapidement des solutions
+                approchées
+                ou optimales.
+            </div>
+
+            <h2> Or-tools</h2>
+            <div class="blockArticle">
+                <a href="https://developers.google.com/optimization">Or-tools</a> est une libraire développée par Google
+                et
+                proposant des algorithmes d'optimisations, des solveurs etc...
+                <br />
+                C'est l'outil que j'ai utilisé (la version python) pour définir mes problèmes de programmation entière.
+            </div>
+            <h2> Application au sujet</h2>
+            <div class="blockArticle">
+                Je vais d'abord présenter la version que l'on a pu exploiter pour améliorer notre score, avant de
+                présenter
+                une
+                version plus ambitieuse (mais qui ne fonctionne pas).
+            </div>
+
+            <div class="blockArticle">
+                Pour des contraintes de taille de données, le solveur comme il a été développé ne peut s'appliquer qu'à
+                l'entrée
+                E (so many books).<br />
+
+                La première version se greffe en sortie du solveur que l'on avait déjà développé, et récupère la sortie
+                générée
+                pour l'optimiser:
+                <ul>
+                    <li>
+                        On garde les librairies et l'ordre dans lesquelles celles-ci ont été ajoutées
+                    </li>
+                    <li>
+                        On optimise seulement les livres qui sont affectés à telle ou telle librairie
+                    </li>
+                </ul>
+            </div>
+
+            <div class="blockArticle">
+                Pour cette version, une seule matrice de variables est définie:
+                <ul>
+                    <li>
+                        <ng-katex [equation]="equations[6]"></ng-katex>
+                        <ng-katex [equation]="equations[7]"></ng-katex>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="blockArticle">
+                Pour avoir une matrice de dimension réduite, on applique l'optimisation suivante:
+                <ul>
+                    <li>
+                        on ne garde que les livres qui sont au moins une fois dans les librairies de la solution
+                    </li>
+                </ul>
+            </div>
+
+            <div class="blockArticle">
+                Définissons les constantes que je vais utiliser:
+
+                <ul>
+                    <li>
+                        <ng-katex [equation]="equations[8]"></ng-katex> : Le nombre total de jours pendant
+                        lesquels on peut scanner des livres / s'inscrire à des
+                        librairies
+                    </li>
+                    <li>
+                        <ng-katex [equation]="equations[9]"></ng-katex> : Le nombre total de livres uniques
+                        considérés (contenus dans au moins une librairie)
+                    </li>
+                    <li>
+                        <ng-katex [equation]="equations[10]"></ng-katex> : Le tableau de dimension B
+                        décrivant la valeur des livres
+                    </li>
+                    <li>
+                        <ng-katex [equation]="equations[11]"></ng-katex> : Le nombre total de librairies de
+                        la solution à optimiser
+                    </li>
+                    <li>
+                        <ng-katex [equation]="equations[12]"></ng-katex> : Le tableau de dimension L
+                        décrivant la durée d'inscription pour une librairie
+                    </li>
+                    <li>
+                        <ng-katex [equation]="equations[13]"></ng-katex> : Le tableau de dimension L
+                        décrivant le nombre de livres que l'on peut scanner par jour pour
+                        une
+                        librairie
+                    </li>
+
+                </ul>
+            </div>
+
+            <div class="blockArticle">
+                Ensuite, viennent l'expression des contraintes de l'énoncé sous la forme d'inégalités.
+
+
+                <div class="constraintBlock">
+                    Un livre ne doit pas être présent dans plusieurs librairies:
+                    <div class="separator"></div>
+                    <div>
+                        <ng-katex [equation]="equations[14]"></ng-katex>
+
+                        <ng-katex [equation]="equations[15]"></ng-katex>
+                    </div>
+                </div>
+                <pre class="line-numbers language-python"><code >for b in range(B):
+    constraint=solver.Constraint(0,1) 
+    for l in range(L): 
+        if(b in libsBooks[l]):
+            constraint.SetCoefficient(bookIsInLibrairie[b][l],1)</code></pre>
+                <div class="constraintBlock">
+                    Un livre ne doit pas être ajouté dans une librairie qui ne le contient pas:
+                    <div class="separator"></div>
+                    <div>
+                        <ng-katex [equation]="equations[16]"></ng-katex>
+
+                        <ng-katex [equation]="equations[17]"></ng-katex>
+                    </div>
+                </div>
+
+
+                <pre class="line-numbers language-python"><code >for b in range(B): 
+    constraint=solver.Constraint(0,0) 
+    for l in range(L):
+        if(b not in libsBooks[l]): 
+            constraint.SetCoefficient(bookIsInLibrairie[b][l],1)</code></pre>
+
+
+                <div class="constraintBlock">
+                    Une librairie a une limite de livres qu'elle peut scanner, en fonction de la date de fin
+                    d'inscription <ng-katex [equation]="equations[18]"></ng-katex>, et du nombre de
+                    livres qu'elle peut scanner par jour.
+                    <div class="separator"></div>
+                    <div>
+                        <ng-katex [equation]="equations[19]"></ng-katex>
+
+                        <ng-katex [equation]="equations[20]"></ng-katex>
+                    </div>
+                </div>
+                <pre class="line-numbers language-python"><code >d=0 
+for l in range(L): 
+    d +=signIn[l]
+    constraint=solver.Constraint(0,max(0,(maxDays-d)*shipping[l])) 
+    for b in range(B): 
+        constraint.SetCoefficient(bookIsInLibrairie[b][l],1)</code></pre>
+            </div>
+            <div class="blockArticle">
+                Finalement, on
+                décrit la fonction que l'on cherche à optimiser.
+                <div class="objectiveBlock">
+                    <ng-katex [equation]="equations[21]"></ng-katex>
+                </div>
+                <pre class="line-numbers language-python"><code >objective = solver.Objective()
+for l in range(L):
+    for b in range(B):
+        objective.SetCoefficient(bookIsInLibrairie[b][l],value[b])
+objective.SetMaximization()</code></pre>
+
+            </div>
+
+            <div class="blockArticle">
+                En laissant tourner le solveur quelques minutes, la solution optimale est renvoyée. Il
+                suffit ensuite à partir des valeurs prises par les différentes variables, de générer la
+                solution dans le format attendu.<br />
+
+                L'impact de ce solveur est limité (on ne gagnait en moyenne pas plus de 800 000 points
+                en
+                optimisant une solution non optimisée), mais c'était tout de même un chouette exercice,
+                et
+                une belle découverte de or-tools.
+            </div>
+
+            <h1> The end</h1>
+            <div class="blockArticle">
+                Voili voilou, c'est tout pour cet article.
+
+                Pour info, après avoir appliqué tout ça (heuristiques, mutations et solveur), on a pu
+                atteindre les 27 106 605 points.<br />
+                A savoir qu'avec cette solution (même si on l'avait magiquement codée à l'avance), le
+                score
+                n'aurait pas été atteint en concours: les mutations crachent de nouveaux scores au bout
+                de
+                très longues périodes de run, et en exploitant des états obtenus lors de précédents
+                runs.
+            </div>
+            <div class="blockArticle">
+                L'objectif n'était donc pas de donner un exemple de bonne solution à coder pour le
+                concours,
+                mais plus des idées ici et là, un exemple d'expérience du concours, et le genre d'erreur
+                à
+                ne pas faire.
+                <br />
+                Personnellement, je retiens notamment la leçon suivante:
+                <ul>
+                    <li>Rusher et s'acharner sur une solution (génétique ici) sans avoir posé de réflexion sur
+                        le
+                        papier, c'est mal</li>
+                </ul>
+                Mais on espère pouvoir revenir en force l'année prochaine.
+            </div>
+            <h2> La suite</h2>
+            <div class="blockArticle">
+                Une seconde partie sera peut-être publiée pour expliquer d'autres idées plus avancées:
+                <ul>
+                    <li>
+                        Un solveur plus complexe (mais pas fonctionnel)
+                    </li>
+                    <li>
+                        La combinaison d'un solveur par mini-batchs avec mutations (idée fraîche pas encore
+                        testée, j'ai l'espoir qu'elle nous fasse atteindre les 27 200 000)
+                    </li>
+                    <li>
+                        La visualisation de données, pour trouver des patterns, voir si on peut les exploiter
+                    </li>
+                </ul>
+            </div>
+            <div class="blockArticle">
+                <h2> Vous pouvez reprendre une activité normale</h2>
+                En espérant que ça ait vous ai fait découvrir quelques trucs par ci par là, inspiré des
+                idées ou motivé à nous rejoindre sur le concours de l'an prochain.
+                <br />
+                Gl&Hf!
+            </div>
+
+        </div>
+        <script src="assets/prism.js"></script>
+
+    </div>
+</section>
